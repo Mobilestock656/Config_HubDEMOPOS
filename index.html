@@ -19,30 +19,34 @@
             --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 10px 10px -5px rgba(15, 23, 42, 0.03);
         }
 
+        /* 🔒 ล็อกตัวบอดี้เว็บใหญ่คงที่ตายตัว ไม่ให้เลื่อนไถลขึ้นลงเด็ดขาด */
         body {
             font-family: 'Prompt', sans-serif;
             background-color: var(--bg-main);
             margin: 0;
             padding: 0;
             color: var(--text-main);
-            min-height: 100vh;
+            height: 100vh;
+            max-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
+            overflow: hidden !important;
             -webkit-text-size-adjust: 100%;
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* Minimal Header แบบกระชับไม่กินพื้นที่ */
         .header {
             text-align: center;
-            padding: 50px 20px 35px;
+            padding: 25px 20px 20px;
             background-color: var(--panel-bg);
             border-bottom: 1px solid #E2E8F0;
+            flex-shrink: 0;
         }
 
         .header .logo-text {
             font-weight: 600;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             letter-spacing: 1px;
             margin: 0;
             color: #0F172A;
@@ -50,41 +54,46 @@
         }
 
         .header .accent-line {
-            width: 40px;
+            width: 35px;
             height: 1px;
             background-color: var(--primary);
-            margin: 12px auto;
+            margin: 8px auto;
             opacity: 0.4;
         }
 
         .header p {
-            margin: 4px 0 0 0;
-            font-size: 0.8rem;
+            margin: 2px 0 0 0;
+            font-size: 0.75rem;
             font-weight: 400;
             color: var(--text-muted);
             letter-spacing: 3px;
             text-transform: uppercase;
         }
 
+        /* Container สไตล์เว็บระบบใหญ่ คลีน ๆ สบายตา */
         .container {
             max-width: 1200px;
             width: 100%;
-            margin: 25px auto 50px;
-            padding: 0 30px;
+            margin: 0 auto;
+            padding: 20px 30px;
             box-sizing: border-box;
             flex: 1;
-            display: block;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* จัดหน้าตักให้อยู่กึ่งกลางหน้าจออย่างสมดุล */
+            overflow: hidden;
         }
 
-        .hub-section { margin-bottom: 35px; }
+        .hub-section { margin-bottom: 25px; }
+        .hub-section:last-child { margin-bottom: 0; }
 
         .section-header {
-            font-size: 0.88rem;
+            font-size: 0.82rem;
             font-weight: 600;
             letter-spacing: 1.5px;
             color: var(--primary);
             text-transform: uppercase;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -97,17 +106,18 @@
             background: linear-gradient(90deg, #E2E8F0, transparent);
         }
 
+        /* Clean Card Grid สัดส่วนพอดีหน้าจอ */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 15px;
         }
 
         .card {
             background: var(--panel-bg);
             border: 1px solid #E2E8F0;
             border-radius: 12px;
-            padding: 22px;
+            padding: 18px 20px;
             display: flex;
             flex-direction: column;
             transition: all 0.2s ease-in-out;
@@ -142,53 +152,54 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .card-badge {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--primary);
             border: 1px solid #E6F4F1;
-            padding: 3px 8px;
-            border-radius: 6px;
+            padding: 2px 6px;
+            border-radius: 4px;
             font-weight: 600;
             background: #E6F4F1;
         }
         .card.disabled .card-badge { color: #64748B; border-color: #E2E8F0; background: #E2E8F0; }
 
-        .meta-right { display: flex; align-items: center; gap: 10px; }
+        .meta-right { display: flex; align-items: center; gap: 8px; }
 
         .btn-share {
             background: #FAFAFA;
             border: 1px solid #E2E8F0;
             color: var(--text-muted);
             border-radius: 50%;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             transition: all 0.2s ease;
             z-index: 10;
         }
         .btn-share:hover { background: #F1F5F9; color: #0F172A; }
 
-        .card-icon { font-size: 1.4rem; }
-        .card-title { font-size: 1.05rem; font-weight: 600; color: #0F172A; margin: 0 0 4px 0; }
-        .card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 16px 0; flex: 1; font-weight: 400; }
+        .card-icon { font-size: 1.3rem; }
+        .card-title { font-size: 1rem; font-weight: 600; color: #0F172A; margin: 0 0 3px 0; }
+        .card-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin: 0 0 12px 0; flex: 1; font-weight: 400; }
 
+        /* ขนาดปุ่มฟังก์ชันมินิมอล กระชับ สวยงาม */
         .card-action-btn {
             background-color: var(--primary);
             color: white;
             text-align: center;
-            padding: 10px 14px;
-            border-radius: 8px;
+            padding: 9px 12px;
+            border-radius: 6px;
             font-weight: 500;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             transition: background-color 0.15s ease;
             margin-top: auto;
             user-select: none;
@@ -196,7 +207,7 @@
         .card:not(.disabled):hover .card-action-btn { background-color: var(--primary-hover); }
         .card.disabled .card-action-btn { background-color: #94A3B8; color: #E2E8F0; }
 
-        /* 🎛️ PREMIUM MODAL OVERLAY STYLES */
+        /* 🎛️ ADJUSTED PREMIUM MODAL OVERLAY STYLES */
         .app-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -206,13 +217,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 999999;
+            z-index: -1; /* ⚡ ปรับค่าเริ่มต้นให้ไปซ่อนอยู่หลังสุดอย่างเด็ดขาด ป้องกันการบล็อกปุ่มหลัก */
             opacity: 0;
             pointer-events: none;
-            transition: all 0.25s ease-out;
+            transition: opacity 0.2s ease-out, z-index 0.2s ease-out;
         }
+        
+        /* 🌟 เมื่อสั่งเปิดหน้าต่าง ค่อยสลับเลเยอร์ขึ้นมาด้านบนสุด */
         .app-modal-overlay.show {
             opacity: 1;
+            z-index: 999999;
             pointer-events: auto;
         }
         
@@ -221,6 +235,7 @@
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             pointer-events: none !important;
+            z-index: 99999999 !important; /* ดันปุ่มย่อกล่องให้ลอยเด่นขึ้นมาเหนือกริล */
         }
         
         .app-modal-window {
@@ -231,7 +246,7 @@
             flex-direction: column;
             overflow: hidden;
             position: relative;
-            transform: translateY(20px);
+            transform: translateY(15px);
             transition: all 0.25s ease-out;
             border: 1px solid #E2E8F0;
             box-shadow: var(--shadow-xl);
@@ -248,7 +263,6 @@
             }
         }
         
-        /* Full Screen Mode */
         .app-modal-window.fullscreen {
             width: 100% !important;
             max-width: 100% !important;
@@ -258,7 +272,6 @@
             top: 0 !important; left: 0 !important; transform: none !important;
         }
 
-        /* Minimized Mode */
         .app-modal-window.minimized {
             position: fixed !important;
             bottom: 20px !important;
@@ -268,14 +281,14 @@
             top: auto !important; left: auto !important;
             border-radius: 12px !important;
             transform: none !important;
-            z-index: 99999999 !important;
             box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
             border: 1px solid var(--primary);
+            pointer-events: auto !important; /* เปิดรับคำสั่งกดขยาย */
         }
         .app-modal-window.minimized .app-modal-body { display: none !important; }
         
         .app-modal-header {
-            padding: 14px 20px;
+            padding: 12px 20px;
             background-color: #FFFFFF;
             border-bottom: 1px solid #F1F5F9;
             display: flex;
@@ -285,7 +298,6 @@
             user-select: none;
         }
         
-        /* macOS Controls */
         .mac-controls { display: flex; gap: 8px; margin-right: 15px; }
         .mac-dot {
             width: 12px; height: 12px; border-radius: 50%; border: none; cursor: pointer;
@@ -311,11 +323,18 @@
         .app-modal-body { flex: 1; width: 100%; height: 100%; background-color: #FAFAFA; position: relative; -webkit-overflow-scrolling: touch; }
         .app-modal-iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* Footer */
-        .footer { text-align: center; padding: 24px 20px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid #E2E8F0; background-color: var(--panel-bg); }
+        /* Footer กระชับติดขอบล่างเว็บใหญ่ */
+        .footer { 
+            text-align: center; 
+            padding: 18px 20px; 
+            font-size: 0.75rem; 
+            color: var(--text-muted); 
+            border-top: 1px solid #E2E8F0; 
+            background-color: var(--panel-bg);
+            flex-shrink: 0;
+        }
         .footer span { color: var(--primary); font-weight: 600; }
 
-        /* Sync Indicator */
         #sync-indicator {
             position: fixed; top: 12px; right: 12px; background: rgba(0, 121, 107, 0.9);
             color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.72rem;
@@ -336,7 +355,7 @@
         <p>Management Hub & Digital Services</p>
     </div>
 
-    <div class="container loaded" id="mainContainer">
+    <div class="container" id="mainContainer">
         <div class="hub-section">
             <div class="section-header">Internal Management System</div>
             <div class="grid" id="internalGrid"></div>
@@ -380,7 +399,6 @@
             
             let clickAction = "";
             if (data.active) {
-                // ส่งค่าคีย์การตรวจจับแยกประเภทแอปเข้าไปรันในระบบหน้าต่างซ้อน
                 clickAction = `onclick="openAppModal('${data.url}', '${data.title}', '${key}')"`;
             } else {
                 clickAction = `onclick="alert('${data.errorMsg}')"`;
@@ -416,31 +434,23 @@
             document.getElementById('appModalTitle').innerText = title;
             document.getElementById('appModalIframe').src = url;
             
-            // 🌟 ตรวจจับความแม่นยำสูง: ถ้าเป็นคีย์คิดเงิน (pos) หรือคลังสินค้า (stock) สั่งกางเต็มจอใหญ่ทันที
             let lowerKey = String(key).toLowerCase();
             let lowerUrl = String(url).toLowerCase();
             if (lowerKey.includes('pos') || lowerKey.includes('stock') || lowerUrl.includes('pos') || lowerUrl.includes('stock') || lowerUrl.includes('mobilestock')) {
                 win.classList.add('fullscreen');
             }
-
-            document.body.style.position = 'fixed';
-            document.body.style.width = '100%';
         }
 
-        // 🔴 ฟังก์ชันปิดหน้าต่างย่อย (ปลดล็อกจอ GitHub ด้านหลังสำเร็จ 100% ทุกกรณี)
+        // 🔴 ฟังก์ชันปิดหน้าต่างย่อย (ดีดเลเยอร์กลับไปซ่อนอยู่ด้านหลังทันที แก้อาการบล็อกปุ่มหายขาด)
         function closeAppModal(force = false) {
             if (force) {
                 const overlay = document.getElementById('appModalOverlay');
-                overlay.className = "app-modal-overlay";
+                overlay.className = "app-modal-overlay"; // ถอดคลาส show ออกเพื่อเปลี่ยน z-index เป็น -1
                 document.getElementById('appModalIframe').src = ""; 
-                
-                // คืนสภาพสิทธิ์การกดเลื่อนและแตะสัมผัสให้กับหน้าจอหลัก
-                document.body.style.position = '';
-                document.body.style.width = '';
             }
         }
 
-        // 🟡 ฟังก์ชันย่อหน้าต่างย่อย
+        // 🟡 ฟังก์ชันย่อหน้าต่างย่อยค้างระบบไว้มุมขวาล่าง
         function minimizeAppModal(event, forceRestore = false) {
             if (event) { event.preventDefault(); event.stopPropagation(); }
             const overlay = document.getElementById('appModalOverlay');
@@ -449,11 +459,9 @@
             if (win.classList.contains('minimized') || forceRestore) {
                 win.classList.remove('minimized');
                 overlay.classList.remove('is-minimized');
-                document.body.style.position = 'fixed';
             } else {
                 win.className = "app-modal-window minimized"; 
                 overlay.classList.add('is-minimized'); 
-                document.body.style.position = '';
             }
         }
 
