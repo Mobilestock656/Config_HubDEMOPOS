@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MANAGEMENT HUB — Digital Services Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght=200;300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-main: #F8FAFC;
@@ -47,6 +47,14 @@
             margin: 0;
             color: var(--text-main);
             text-transform: uppercase;
+        }
+
+        .header .accent-line {
+            width: 60px;
+            height: 1px;
+            background-color: var(--primary);
+            margin: 20px auto;
+            opacity: 0.3;
         }
 
         .header p {
@@ -260,34 +268,28 @@
 </head>
 <body>
 
-    <!-- SCREEN LOADER -->
     <div id="loader">
         <div class="spinner"></div>
         <p>กำลังโหลดระบบ...</p>
     </div>
 
-    <!-- MAIN HEADER -->
     <div class="header">
         <h1 class="logo-text" id="shopTitleDisplay">MIRA HAIR STUDIO</h1>
         <div class="accent-line"></div>
         <p>Management Hub & Digital Services</p>
     </div>
 
-    <!-- MAIN CONTAINER -->
     <div class="container" id="mainContainer">
-        <!-- 🤵 SECTION: พนักงาน -->
         <div class="hub-section">
             <div class="section-header">Internal Management System</div>
             <div class="grid" id="internalGrid"></div>
         </div>
-        <!-- 👑 SECTION: ลูกค้า -->
         <div class="hub-section">
             <div class="section-header">Exclusive Guest Services</div>
             <div class="grid" id="guestGrid"></div>
         </div>
     </div>
 
-    <!-- CLEAN FOOTER -->
     <div class="footer">
         &copy; 2026 <span id="footerShopName">MIRA HAIR STUDIO</span>. All Rights Reserved.
     </div>
@@ -342,12 +344,9 @@
                 internalGrid.innerHTML = '';
                 guestGrid.innerHTML = '';
 
-                // เปลี่ยนข้อความหัวข้อตามชื่อร้านที่ระบุ
-               <div class="header">
-                <h1 class="logo-text" id="shopTitleDisplay">กำลังโหลด...</h1>
-                <div class="accent-line"></div>
-                <p>Management Hub & Digital Services</p>
-               </div>
+                // เปลี่ยนข้อความหัวข้อตามชื่อร้านที่ดึงมาจากฝั่ง Google Sheet จริง
+                document.getElementById('shopTitleDisplay').innerText = res.shop;
+                document.getElementById('footerShopName').innerText = res.shop.toUpperCase();
 
                 // จัดเรียงการ์ดลงหมวดหมู่
                 Object.keys(config).forEach(key => {
