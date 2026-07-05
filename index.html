@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIRA HAIR STUDIO — Premium Management Hub</title>
+    <title>MANAGEMENT HUB — Digital Services Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1e2f 100%);
-            --panel-bg: rgba(255, 255, 255, 0.03);
-            --panel-border: rgba(255, 255, 255, 0.08);
-            --gold-primary: #d4af37;
-            --gold-hover: #f3e5ab;
-            --gold-gradient: linear-gradient(135deg, #b38728 0%, #fbf5b7 50%, #daa520 100%);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --glass-blur: blur(16px);
+            --bg-main: #F8FAFC;
+            --panel-bg: #FFFFFF;
+            --primary: #00796B;
+            --primary-hover: #004D40;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border-color: #E2E8F0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02);
         }
 
         body {
             font-family: 'Prompt', sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
+            background-color: var(--bg-main);
             margin: 0;
             padding: 0;
             color: var(--text-main);
@@ -31,73 +31,57 @@
             overflow-x: hidden;
         }
 
-        body::before, body::after {
-            content: '';
-            position: fixed;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
-            z-index: -1;
-        }
-        body::before { top: -50px; left: -50px; }
-        body::after { bottom: -50px; right: -50px; }
-
+        /* Minimal Header */
         .header {
             text-align: center;
             padding: 60px 20px 40px;
+            background-color: var(--panel-bg);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
         }
 
         .header .logo-text {
-            font-weight: 200;
+            font-weight: 600;
             font-size: 2.2rem;
-            letter-spacing: 4px;
+            letter-spacing: 1px;
             margin: 0;
+            color: var(--text-main);
             text-transform: uppercase;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header .accent-line {
-            width: 60px;
-            height: 1px;
-            background: var(--gold-primary);
-            margin: 20px auto;
-            opacity: 0.6;
         }
 
         .header p {
-            margin: 0;
-            font-size: 0.95rem;
-            font-weight: 300;
+            margin: 8px 0 0 0;
+            font-size: 0.9rem;
+            font-weight: 400;
             color: var(--text-muted);
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
+        /* Main Container */
         .container {
-            max-width: 1100px;
+            max-width: 1140px;
             width: 100%;
-            margin: 0 auto 60px;
+            margin: 40px auto 60px;
             padding: 0 24px;
             box-sizing: border-box;
             flex: 1;
             opacity: 0;
-            transition: opacity 0.6s ease;
-            display: none; /* ซ่อนไว้ก่อนจนกว่าข้อมูลจะโหลดเสร็จ */
+            transition: opacity 0.4s ease;
+            display: none;
         }
         .container.loaded { 
             display: block;
             opacity: 1; 
         }
 
-        .hub-section { margin-bottom: 50px; }
+        .hub-section { margin-bottom: 45px; }
 
         .section-header {
             font-size: 1.05rem;
-            font-weight: 500;
-            letter-spacing: 2px;
-            color: var(--gold-primary);
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--primary);
             text-transform: uppercase;
             margin-bottom: 25px;
             display: flex;
@@ -109,9 +93,10 @@
             content: '';
             flex: 1;
             height: 1px;
-            background: linear-gradient(90deg, rgba(212, 175, 55, 0.2), transparent);
+            background: linear-gradient(90deg, var(--border-color), transparent);
         }
 
+        /* Clean White Grid & Cards */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -120,16 +105,14 @@
 
         .card {
             background: var(--panel-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--panel-border);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 30px;
             display: flex;
             flex-direction: column;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
-            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
 
         .card-link {
@@ -141,32 +124,19 @@
             flex: 1;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.03) 0%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
         .card:not(.disabled):hover {
-            transform: translateY(-5px);
-            border-color: rgba(212, 175, 55, 0.4);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(212, 175, 55, 0.1);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: #CBD5E1;
         }
-
-        .card:not(.disabled):hover::before { opacity: 1; }
 
         .card.disabled {
-            opacity: 0.35;
+            background-color: #F1F5F9;
+            opacity: 0.6;
             cursor: not-allowed;
-            border-color: rgba(255, 255, 255, 0.02);
+            border-color: var(--border-color);
+            box-shadow: none;
         }
-        .card.disabled .card-action { color: #ef4444; }
 
         .card-meta {
             display: flex;
@@ -176,123 +146,159 @@
         }
 
         .card-badge {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--gold-primary);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            padding: 4px 10px;
+            letter-spacing: 1px;
+            color: var(--primary);
+            border: 1px solid #CCFBF1;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-weight: 500;
-            background: rgba(212, 175, 55, 0.02);
+            font-weight: 600;
+            background: #E6F4F1;
         }
-        .card.disabled .card-badge { color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
+        .card.disabled .card-badge { 
+            color: #DC2626; 
+            border-color: #FEE2E2; 
+            background: #FEE2E2;
+        }
 
         .meta-right { display: flex; align-items: center; gap: 12px; }
 
         .btn-share {
-            background: transparent;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            color: var(--gold-primary);
+            background: #F8FAFC;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
             border-radius: 50%;
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
             z-index: 10;
         }
-        .btn-share:hover { background: rgba(212, 175, 55, 0.1); border-color: var(--gold-primary); transform: scale(1.05); }
+        .btn-share:hover { background: #E2E8F0; color: var(--text-main); border-color: #CBD5E1; }
 
-        .card-icon { font-size: 1.8rem; opacity: 0.8; transition: transform 0.4s ease; }
-        .card:not(.disabled):hover .card-icon { transform: scale(1.1); opacity: 1; }
+        .card-icon { font-size: 1.8rem; }
 
-        .card-title { font-size: 1.25rem; font-weight: 500; color: var(--text-main); margin: 0 0 12px 0; letter-spacing: 0.5px; }
-        .card-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin: 0 0 25px 0; flex: 1; font-weight: 300; }
-
-        .card-action {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--gold-primary);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-top: auto;
-            transition: color 0.3s ease;
+        .card-title { 
+            font-size: 1.2rem; 
+            font-weight: 600; 
+            color: var(--text-main); 
+            margin: 0 0 10px 0; 
         }
-        .card-action-arrow { transition: transform 0.3s ease; }
-        .card:not(.disabled):hover .card-action { color: var(--gold-hover); }
-        .card:not(.disabled):hover .card-action-arrow { transform: translateX(5px); }
+        .card-desc { 
+            font-size: 0.9rem; 
+            color: var(--text-muted); 
+            line-height: 1.6; 
+            margin: 0 0 25px 0; 
+            flex: 1; 
+            font-weight: 300; 
+        }
 
-        /* Luxury Loader */
+        /* Solid UI Action Buttons */
+        .card-action-btn {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background-color 0.2s ease;
+            margin-top: auto;
+            box-shadow: 0 2px 4px rgba(0, 121, 107, 0.1);
+        }
+        .card:not(.disabled):hover .card-action-btn {
+            background-color: var(--primary-hover);
+        }
+        .card.disabled .card-action-btn {
+            background-color: #94A3B8;
+            color: #E2E8F0;
+            box-shadow: none;
+        }
+
+        /* Clean Footer */
+        .footer { 
+            text-align: center; 
+            padding: 30px 20px; 
+            font-size: 0.85rem; 
+            color: var(--text-muted); 
+            border-top: 1px solid var(--border-color); 
+            background-color: var(--panel-bg);
+            font-weight: 400; 
+        }
+        .footer span { color: var(--primary); font-weight: 600; }
+
+        /* Minimal Loader */
         #loader {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #0f172a;
+            background: #FFFFFF;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 99999;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.4s ease;
         }
         .spinner {
             width: 40px; height: 40px;
-            border: 2px solid rgba(212, 175, 55, 0.1);
-            border-top: 2px solid var(--gold-primary);
+            border: 3px solid #E2E8F0;
+            border-top: 3px solid var(--primary);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #loader p { color: var(--gold-primary); margin-top: 20px; font-weight: 300; font-size: 0.85rem; letter-spacing: 2px; }
+        #loader p { color: var(--primary); margin-top: 20px; font-weight: 500; font-size: 0.85rem; letter-spacing: 1px; }
 
-        .footer { text-align: center; padding: 30px 20px; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid rgba(255, 255, 255, 0.03); letter-spacing: 1px; font-weight: 300; }
-        .footer span { color: var(--gold-primary); }
-
-        .toast { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.9); border: 1px solid var(--gold-primary); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); color: var(--text-main); padding: 12px 24px; border-radius: 30px; font-size: 0.9rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px; }
+        .toast { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: #0F172A; color: white; padding: 12px 28px; border-radius: 30px; font-size: 0.9rem; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 9999; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px; font-weight: 500; }
         .toast.show { bottom: 40px; }
     </style>
 </head>
 <body>
 
+    <!-- SCREEN LOADER -->
     <div id="loader">
         <div class="spinner"></div>
-        <p>LOADING EXPERIENCE...</p>
+        <p>กำลังโหลดระบบ...</p>
     </div>
 
+    <!-- MAIN HEADER -->
     <div class="header">
-        <h1 class="logo-text" id="shopTitleDisplay">Mira Hair Studio</h1>
+        <h1 class="logo-text" id="shopTitleDisplay">MIRA HAIR STUDIO</h1>
         <div class="accent-line"></div>
-        <p>PREMIUM MANAGEMENT HUB & DIGITAL SERVICES</p>
+        <p>Management Hub & Digital Services</p>
     </div>
 
+    <!-- MAIN CONTAINER -->
     <div class="container" id="mainContainer">
+        <!-- 🤵 SECTION: พนักงาน -->
         <div class="hub-section">
             <div class="section-header">Internal Management System</div>
             <div class="grid" id="internalGrid"></div>
         </div>
+        <!-- 👑 SECTION: ลูกค้า -->
         <div class="hub-section">
             <div class="section-header">Exclusive Guest Services</div>
             <div class="grid" id="guestGrid"></div>
         </div>
     </div>
 
+    <!-- CLEAN FOOTER -->
     <div class="footer">
         &copy; 2026 <span id="footerShopName">MIRA HAIR STUDIO</span>. All Rights Reserved.
     </div>
 
-    <div id="toastNotification" class="toast">✨ คัดลอกลิงก์ไปยังคลิปบอร์ดเรียบร้อยแล้ว</div>
+    <div id="toastNotification" class="toast">✨ คัดลอกลิงก์เรียบร้อยแล้ว</div>
 
     <script>
-        // 🔗 ดึงข้อมูลผ่าน URL API ที่ระบบให้มาโดยตรงเพื่อป้องกันการพิมพ์ผิดพลาด
-        const Master_GAS_URL = "https://script.google.com/macros/s/AKfycbxrJzwwtaV39NFkc_LH3gkj_wEZjC9fw_e6SZei89tG3GVYuW45pkMCyWu32j6v2v4/exec";
+        // ลิงก์กลาง Master Apps Script API
+        const Master_GAS_URL = "https://script.google.com/macros/s/AKfycbwPqCInqYfB79IqUOfSAs5xXhYx0XN7b00XlP0Ayg/exec";
 
-        // ฟังก์ชันสร้างการ์ดระบบ
+        // ฟังก์ชันสร้างการ์ดระบบ (ปรับเป็นปุ่มกดขนาดใหญ่กว้างเต็มบล็อก)
         function createCard(data) {
             const card = document.createElement('div');
             card.className = `card ${!data.active ? 'disabled' : ''}`;
@@ -307,8 +313,8 @@
                 <a href="${data.active ? data.url : 'javascript:void(0);'}" ${data.active ? 'target="_blank"' : `onclick="alert('${data.errorMsg}')"`} class="card-link">
                     <h3 class="card-title">${data.title}</h3>
                     <p class="card-desc">${data.desc}</p>
-                    <div class="card-action">
-                        ${data.active ? 'เข้าสู่ระบบบริการ <span class="card-action-arrow">→</span>' : '💥 กำลังปรับปรุงระบบ'}
+                    <div class="card-action-btn">
+                        ${data.active ? 'เปิดเข้าใช้งานระบบ' : 'กำลังปรับปรุงระบบ'}
                     </div>
                 </a>
             `;
@@ -328,11 +334,9 @@
 
         // ประมวลผลดึงข้อมูลแยกรายร้านค้าแบบ Dynamic
         document.addEventListener("DOMContentLoaded", function() {
-            // ดึงค่า parameter ?shop= จากหน้าเว็บเบราว์เซอร์
             const urlParams = new URLSearchParams(window.location.search);
-            let shopName = urlParams.get('shop') || 'DEMOPOS'; // หากไม่ได้ระบุร้าน ระบบจะวิ่งเข้าหาแท็บ DEMOPOS เป็นอันดับแรก
+            let shopName = urlParams.get('shop') || 'DEMOPOS';
 
-            // ประกอบโครงสร้าง API เพื่อส่ง Parameter ไปยัง Google Apps Script ของคุณ
             const FINAL_API_URL = `${Master_GAS_URL}?action=getHubConfig&shop=${encodeURIComponent(shopName)}`;
 
             fetch(FINAL_API_URL)
@@ -343,17 +347,16 @@
                         const internalGrid = document.getElementById('internalGrid');
                         const guestGrid = document.getElementById('guestGrid');
 
-                        // เคลียร์พื้นที่ Grid ดั้งเดิมเพื่อป้องกันข้อมูลซ้ำซ้อน
                         internalGrid.innerHTML = '';
                         guestGrid.innerHTML = '';
 
-                        // เปลี่ยนชื่อหัวข้อหลักของร้านค้าตามแท็บที่เรียกใช้งานจริงใน Google Sheet
+                        // เปลี่ยนข้อความหัวข้อตามชื่อร้านที่ดึงมาจริงจาก Sheet
                         if(shopName !== 'DEMOPOS') {
                             document.getElementById('shopTitleDisplay').innerText = res.shop;
                             document.getElementById('footerShopName').innerText = res.shop.toUpperCase();
                         }
 
-                        // วนลูปสร้างกล่องเมนูฟังก์ชันบริการ
+                        // จัดเรียงการ์ดลงหมวดหมู่
                         Object.keys(config).forEach(key => {
                             const item = config[key];
                             const cardElement = createCard(item);
@@ -365,18 +368,18 @@
                             }
                         });
 
-                        // ปิดหน้าจอประมวลผล (Loader) และเปิดหน้าคอนเทนเนอร์แบบนุ่มนวล
+                        // ปิดสกรีนดาวน์โหลด แสดงคอนเทนต์
                         document.getElementById('loader').style.opacity = '0';
                         setTimeout(() => {
                             document.getElementById('loader').style.display = 'none';
                             document.getElementById('mainContainer').classList.add('loaded');
-                        }, 500);
+                        }, 400);
                     } else {
                         alert("เกิดข้อผิดพลาดในการดึงข้อมูลจากชีต: " + res.msg);
                     }
                 })
                 .catch(err => {
-                    alert("การเชื่อมต่อล้มเหลว กรุณาตรวจสอบการแชร์หรือสิทธิ์การเข้าถึงลิงก์ Web App");
+                    alert("การเชื่อมต่อล้มเหลว กรุณาตรวจสอบสิทธิ์การแชร์ของกูเกิลชีตหรือลิงก์โปรแกรม");
                     console.error(err);
                 });
         });
