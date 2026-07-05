@@ -19,26 +19,31 @@
             --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 10px 10px -5px rgba(15, 23, 42, 0.03);
         }
 
-        /* 🔒 ล็อกตัวบอดี้เว็บใหญ่คงที่ตายตัว ไม่ให้เลื่อนไถลขึ้นลงเด็ดขาด */
         body {
             font-family: 'Prompt', sans-serif;
             background-color: var(--bg-main);
             margin: 0;
             padding: 0;
             color: var(--text-main);
-            height: 100vh;
-            max-height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden !important;
             -webkit-text-size-adjust: 100%;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Minimal Header แบบกระชับไม่กินพื้นที่ */
+        /* ล็อกบอดี้ไม่ให้ขยับเมื่อมีการสั่งเปิดหน้าต่างย่อย */
+        body.modal-open {
+            overflow: hidden !important;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Minimal Header */
         .header {
             text-align: center;
-            padding: 25px 20px 20px;
+            padding: 45px 20px 30px;
             background-color: var(--panel-bg);
             border-bottom: 1px solid #E2E8F0;
             flex-shrink: 0;
@@ -46,7 +51,7 @@
 
         .header .logo-text {
             font-weight: 600;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             letter-spacing: 1px;
             margin: 0;
             color: #0F172A;
@@ -54,46 +59,41 @@
         }
 
         .header .accent-line {
-            width: 35px;
+            width: 40px;
             height: 1px;
             background-color: var(--primary);
-            margin: 8px auto;
+            margin: 12px auto;
             opacity: 0.4;
         }
 
         .header p {
-            margin: 2px 0 0 0;
-            font-size: 0.75rem;
+            margin: 4px 0 0 0;
+            font-size: 0.8rem;
             font-weight: 400;
             color: var(--text-muted);
             letter-spacing: 3px;
             text-transform: uppercase;
         }
 
-        /* Container สไตล์เว็บระบบใหญ่ คลีน ๆ สบายตา */
+        /* Container ยืดหยุ่นตามเนื้อหา ไม่เบียดปุ่ม */
         .container {
             max-width: 1200px;
             width: 100%;
             margin: 0 auto;
-            padding: 20px 30px;
+            padding: 30px 20px 60px;
             box-sizing: border-box;
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* จัดหน้าตักให้อยู่กึ่งกลางหน้าจออย่างสมดุล */
-            overflow: hidden;
         }
 
-        .hub-section { margin-bottom: 25px; }
-        .hub-section:last-child { margin-bottom: 0; }
+        .hub-section { margin-bottom: 35px; }
 
         .section-header {
-            font-size: 0.82rem;
+            font-size: 0.88rem;
             font-weight: 600;
             letter-spacing: 1.5px;
             color: var(--primary);
             text-transform: uppercase;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -106,18 +106,18 @@
             background: linear-gradient(90deg, #E2E8F0, transparent);
         }
 
-        /* Clean Card Grid สัดส่วนพอดีหน้าจอ */
+        /* Grid และการ์ดดีไซน์กระชับ มินิมอล คลีนตา */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
         }
 
         .card {
             background: var(--panel-bg);
             border: 1px solid #E2E8F0;
             border-radius: 12px;
-            padding: 18px 20px;
+            padding: 22px;
             display: flex;
             flex-direction: column;
             transition: all 0.2s ease-in-out;
@@ -152,54 +152,53 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .card-badge {
-            font-size: 0.68rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--primary);
             border: 1px solid #E6F4F1;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 3px 8px;
+            border-radius: 6px;
             font-weight: 600;
             background: #E6F4F1;
         }
         .card.disabled .card-badge { color: #64748B; border-color: #E2E8F0; background: #E2E8F0; }
 
-        .meta-right { display: flex; align-items: center; gap: 8px; }
+        .meta-right { display: flex; align-items: center; gap: 10px; }
 
         .btn-share {
             background: #FAFAFA;
             border: 1px solid #E2E8F0;
             color: var(--text-muted);
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             transition: all 0.2s ease;
             z-index: 10;
         }
         .btn-share:hover { background: #F1F5F9; color: #0F172A; }
 
-        .card-icon { font-size: 1.3rem; }
-        .card-title { font-size: 1rem; font-weight: 600; color: #0F172A; margin: 0 0 3px 0; }
-        .card-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin: 0 0 12px 0; flex: 1; font-weight: 400; }
+        .card-icon { font-size: 1.4rem; }
+        .card-title { font-size: 1.05rem; font-weight: 600; color: #0F172A; margin: 0 0 4px 0; }
+        .card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 16px 0; flex: 1; font-weight: 400; }
 
-        /* ขนาดปุ่มฟังก์ชันมินิมอล กระชับ สวยงาม */
         .card-action-btn {
             background-color: var(--primary);
             color: white;
             text-align: center;
-            padding: 9px 12px;
-            border-radius: 6px;
+            padding: 10px 14px;
+            border-radius: 8px;
             font-weight: 500;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             transition: background-color 0.15s ease;
             margin-top: auto;
             user-select: none;
@@ -207,35 +206,32 @@
         .card:not(.disabled):hover .card-action-btn { background-color: var(--primary-hover); }
         .card.disabled .card-action-btn { background-color: #94A3B8; color: #E2E8F0; }
 
-        /* 🎛️ ADJUSTED PREMIUM MODAL OVERLAY STYLES */
+        /* 🎛️ LUXURY MODAL OVERLAY STYLES (แยกเลเยอร์ออกจากหน้าแรกโดยเด็ดขาด) */
         .app-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(15, 23, 42, 0.35);
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
-            display: flex;
+            display: none; /* ⚡ ปรับเป็น none ป้องกันการกางเลเยอร์ล่องหนมาบังปุ่มกดเด็ดขาด */
             align-items: center;
             justify-content: center;
-            z-index: -1; /* ⚡ ปรับค่าเริ่มต้นให้ไปซ่อนอยู่หลังสุดอย่างเด็ดขาด ป้องกันการบล็อกปุ่มหลัก */
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease-out, z-index 0.2s ease-out;
-        }
-        
-        /* 🌟 เมื่อสั่งเปิดหน้าต่าง ค่อยสลับเลเยอร์ขึ้นมาด้านบนสุด */
-        .app-modal-overlay.show {
-            opacity: 1;
             z-index: 999999;
-            pointer-events: auto;
+            opacity: 0;
+            transition: opacity 0.2s ease-out;
+        }
+        .app-modal-overlay.show {
+            display: flex !important;
+            opacity: 1;
         }
         
+        /* สิทธิ์ปุ่มย่อกล่องลอยตัวอิสระ */
         .app-modal-overlay.is-minimized {
             background-color: transparent !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
-            pointer-events: none !important;
-            z-index: 99999999 !important; /* ดันปุ่มย่อกล่องให้ลอยเด่นขึ้นมาเหนือกริล */
+            display: block !important;
+            pointer-events: none !important; /* เปิดทางให้จิ้มทะลุลงไปปุ่มด้านหลังได้ */
         }
         
         .app-modal-window {
@@ -246,11 +242,11 @@
             flex-direction: column;
             overflow: hidden;
             position: relative;
-            transform: translateY(15px);
+            transform: translateY(20px);
             transition: all 0.25s ease-out;
             border: 1px solid #E2E8F0;
             box-shadow: var(--shadow-xl);
-            pointer-events: auto;
+            pointer-events: auto; /* ให้กล่องตัวเด้งรับการจิ้มปกติ */
         }
         
         @media (min-width: 576px) {
@@ -263,6 +259,7 @@
             }
         }
         
+        /* Full Screen Mode */
         .app-modal-window.fullscreen {
             width: 100% !important;
             max-width: 100% !important;
@@ -272,6 +269,7 @@
             top: 0 !important; left: 0 !important; transform: none !important;
         }
 
+        /* Minimized Mode */
         .app-modal-window.minimized {
             position: fixed !important;
             bottom: 20px !important;
@@ -283,12 +281,12 @@
             transform: none !important;
             box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
             border: 1px solid var(--primary);
-            pointer-events: auto !important; /* เปิดรับคำสั่งกดขยาย */
+            pointer-events: auto !important;
         }
         .app-modal-window.minimized .app-modal-body { display: none !important; }
         
         .app-modal-header {
-            padding: 12px 20px;
+            padding: 14px 20px;
             background-color: #FFFFFF;
             border-bottom: 1px solid #F1F5F9;
             display: flex;
@@ -298,6 +296,7 @@
             user-select: none;
         }
         
+        /* macOS Controls */
         .mac-controls { display: flex; gap: 8px; margin-right: 15px; }
         .mac-dot {
             width: 12px; height: 12px; border-radius: 50%; border: none; cursor: pointer;
@@ -323,18 +322,11 @@
         .app-modal-body { flex: 1; width: 100%; height: 100%; background-color: #FAFAFA; position: relative; -webkit-overflow-scrolling: touch; }
         .app-modal-iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* Footer กระชับติดขอบล่างเว็บใหญ่ */
-        .footer { 
-            text-align: center; 
-            padding: 18px 20px; 
-            font-size: 0.75rem; 
-            color: var(--text-muted); 
-            border-top: 1px solid #E2E8F0; 
-            background-color: var(--panel-bg);
-            flex-shrink: 0;
-        }
+        /* Footer */
+        .footer { text-align: center; padding: 24px 20px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid #E2E8F0; background-color: var(--panel-bg); flex-shrink: 0; }
         .footer span { color: var(--primary); font-weight: 600; }
 
+        /* Sync Indicator */
         #sync-indicator {
             position: fixed; top: 12px; right: 12px; background: rgba(0, 121, 107, 0.9);
             color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.72rem;
@@ -390,6 +382,7 @@
     <div id="toastNotification" class="toast">✨ คัดลอกลิงก์เรียบร้อยแล้ว</div>
 
     <script>
+        // ลิงก์กลางหลักฝั่งกูเกิลของรหัสโปรแกรมคุณ
         const Master_GAS_URL = "https://script.google.com/macros/s/AKfycbxrJzwwtaV39NFkc_LH3gkj_wEZjC9fw_e6SZei89tG3GVYuW45pkMCyWu32j6v2v4/exec";
 
         // ฟังก์ชันสร้างการ์ดระบบ
@@ -439,14 +432,20 @@
             if (lowerKey.includes('pos') || lowerKey.includes('stock') || lowerUrl.includes('pos') || lowerUrl.includes('stock') || lowerUrl.includes('mobilestock')) {
                 win.classList.add('fullscreen');
             }
+
+            // ล็อกหน้าจอหลักด้านหลังไม่ให้รูดขยับเลื่อนเมื่อพนักงานกำลังคีย์งานในกล่องย่อย
+            document.body.classList.add('modal-open');
         }
 
-        // 🔴 ฟังก์ชันปิดหน้าต่างย่อย (ดีดเลเยอร์กลับไปซ่อนอยู่ด้านหลังทันที แก้อาการบล็อกปุ่มหายขาด)
+        // 🔴 ฟังก์ชันปิดหน้าต่างย่อย (เคลียร์ค่าการล็อกหน้าจอหลักหมดจด ปุ่มกดติด 100%)
         function closeAppModal(force = false) {
             if (force) {
                 const overlay = document.getElementById('appModalOverlay');
-                overlay.className = "app-modal-overlay"; // ถอดคลาส show ออกเพื่อเปลี่ยน z-index เป็น -1
+                overlay.className = "app-modal-overlay"; 
                 document.getElementById('appModalIframe').src = ""; 
+                
+                // ปลดล็อกคืนสิทธิ์หน้าจอหลักให้แตะทำงานปกติ
+                document.body.classList.remove('modal-open');
             }
         }
 
@@ -459,9 +458,11 @@
             if (win.classList.contains('minimized') || forceRestore) {
                 win.classList.remove('minimized');
                 overlay.classList.remove('is-minimized');
+                document.body.classList.add('modal-open'); // ล็อกจอหลังต่อ
             } else {
                 win.className = "app-modal-window minimized"; 
                 overlay.classList.add('is-minimized'); 
+                document.body.classList.remove('modal-open'); // ปลดล็อกชั่วคราวให้จิ้มการ์ดอื่นด้านหลังได้
             }
         }
 
@@ -512,28 +513,30 @@
                 let shopNameParam = urlParams.get('shop') || 'DEMOPOS';
 
                 renderHubUI(res.shop, res.data);
-                localStorage.setItem('hub_cache_' + shopNameParam, JSON.stringify(res));
+                localStorage.setItem('hub_cache_' + shopNameParam.trim(), JSON.stringify(res));
             }
         };
 
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             let shopName = urlParams.get('shop') || 'DEMOPOS';
+            shopName = shopName.trim(); // ล้างช่องว่างหัวท้ายตัวแปรพารามิเตอร์
             
+            // 1. ดึงข้อมูลจาก Cache ในเครื่องขึ้นมาเปิดปุ่มให้ใช้งานทันทีใน 0.1 วินาที!
             const cachedData = localStorage.getItem('hub_cache_' + shopName);
             if (cachedData) {
                 try {
                     const parsed = JSON.parse(cachedData);
                     renderHubUI(parsed.shop, parsed.data);
                 } catch(e) { console.log("Cache recovery error."); }
-            } else {
-                document.getElementById('shopTitleDisplay').innerText = "กำลังซิงค์ข้อมูล...";
             }
 
+            // 2. สั่งเปิดสเตตัสซิงค์ แอบยิงดึงข้อมูลแยกรายร้านค้าแบบ Dynamic ไร้ปัญหา CORS ลิงก์ซ้อน
             document.getElementById('sync-indicator').style.display = 'block';
             
-            const connector = Master_GAS_URL.includes('?') ? '&' : '?';
-            const jsonpUrl = `${Master_GAS_URL}${connector}action=getHubConfig&shop=${encodeURIComponent(shopName)}&callback=handleHubResponse`;
+            // 🌟 จุดเด่นรอบนี้: ปรับการตัดฟอร์แมตรหัสพารามิเตอร์ของ URL ใหม่ ปลดล็อกการเรียกดูแท็บร้านอื่น ๆ ได้ถูกต้องแม่นยำ
+            let cleanBaseUrl = Master_GAS_URL.split('?')[0];
+            const jsonpUrl = `${cleanBaseUrl}?action=getHubConfig&shop=${encodeURIComponent(shopName)}&callback=handleHubResponse`;
 
             const script = document.createElement('script');
             script.src = jsonpUrl;
