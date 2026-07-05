@@ -73,7 +73,7 @@
             padding: 0 30px;
             box-sizing: border-box;
             flex: 1;
-            display: block; /* ⚡ เปิดหน้าต่างให้แสดงผลทันที ไม่ล็อกจอ */
+            display: block;
         }
 
         .hub-section { margin-bottom: 35px; }
@@ -315,7 +315,7 @@
         .footer { text-align: center; padding: 24px 20px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid #E2E8F0; background-color: var(--panel-bg); }
         .footer span { color: var(--primary); font-weight: 600; }
 
-        /* ⚡ ปรับปรุงสเตตัสโหลดแบคเบราวด์จิ๋วสีทองมุมขวาบน เพื่อไม่รบกวนการทำงานหลัก */
+        /* Sync Indicator */
         #sync-indicator {
             position: fixed; top: 12px; right: 12px; background: rgba(0, 121, 107, 0.9);
             color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.72rem;
@@ -352,7 +352,7 @@
             <div class="restore-click-zone" onclick="minimizeAppModal(event, forceRestore=true)"></div>
             <div class="app-modal-header">
                 <div class="mac-controls">
-                    <button class="mac-dot mac-close" onclick="closeAppModal(force=true)" title="ปิดหน้าต่าง">✕</button>
+                    <button class="mac-dot mac-close" onclick="closeAppModal(true)" title="ปิดหน้าต่าง">✕</button>
                     <button class="mac-dot mac-minimize" onclick="minimizeAppModal(event)" title="ย่อหน้าต่าง">⎯</button>
                     <button class="mac-dot mac-expand" onclick="toggleFullscreenAppModal()" title="ขยายเต็มหน้าจอ">⤢</button>
                 </div>
@@ -380,7 +380,8 @@
             
             let clickAction = "";
             if (data.active) {
-                clickAction = `onclick="openAppModal('${data.url}', '${data.title}')"`;
+                // ส่งค่าคีย์การตรวจจับแยกประเภทแอปเข้าไปรันในระบบหน้าต่างซ้อน
+                clickAction = `onclick="openAppModal('${data.url}', '${data.title}', '${key}')"`;
             } else {
                 clickAction = `onclick="alert('${data.errorMsg}')"`;
             }
@@ -404,7 +405,8 @@
             return card;
         }
 
-        function openAppModal(url, title) {
+        // ฟังก์ชันเปิดหน้าต่างย่อยซ้อนระบบหลัก
+        function openAppModal(url, title, key) {
             const overlay = document.getElementById('appModalOverlay');
             const win = document.getElementById('appModalWindow');
             
@@ -414,8 +416,10 @@
             document.getElementById('appModalTitle').innerText = title;
             document.getElementById('appModalIframe').src = url;
             
-            let lowerUrl = url.toLowerCase();
-            if (lowerUrl.includes('pos') || lowerUrl.includes('stock') || lowerUrl.includes('mobilestock')) {
+            // 🌟 ตรวจจับความแม่นยำสูง: ถ้าเป็นคีย์คิดเงิน (pos) หรือคลังสินค้า (stock) สั่งกางเต็มจอใหญ่ทันที
+            let lowerKey = String(key).toLowerCase();
+            let lowerUrl = String(url).toLowerCase();
+            if (lowerKey.includes('pos') || lowerKey.includes('stock') || lowerUrl.includes('pos') || lowerUrl.includes('stock') || lowerUrl.includes('mobilestock')) {
                 win.classList.add('fullscreen');
             }
 
@@ -423,18 +427,22 @@
             document.body.style.width = '100%';
         }
 
+        // 🔴 ฟังก์ชันปิดหน้าต่างย่อย (ปลดล็อกจอ GitHub ด้านหลังสำเร็จ 100% ทุกกรณี)
         function closeAppModal(force = false) {
             if (force) {
                 const overlay = document.getElementById('appModalOverlay');
                 overlay.className = "app-modal-overlay";
                 document.getElementById('appModalIframe').src = ""; 
+                
+                // คืนสภาพสิทธิ์การกดเลื่อนและแตะสัมผัสให้กับหน้าจอหลัก
                 document.body.style.position = '';
                 document.body.style.width = '';
             }
         }
 
+        // 🟡 ฟังก์ชันย่อหน้าต่างย่อย
         function minimizeAppModal(event, forceRestore = false) {
-            if (event) { e.preventDefault(); event.stopPropagation(); }
+            if (event) { event.preventDefault(); event.stopPropagation(); }
             const overlay = document.getElementById('appModalOverlay');
             const win = document.getElementById('appModalWindow');
             
@@ -449,6 +457,7 @@
             }
         }
 
+        // 🟢 ฟังก์ชันสลับฟูลสกรีน
         function toggleFullscreenAppModal() {
             const win = document.getElementById('appModalWindow');
             if (win.classList.contains('minimized')) return;
@@ -488,39 +497,31 @@
             });
         }
 
-        // 🌟 ฟังก์ชันรับคำสั่ง JSONP จาก Google Apps Script (แอบอัปเดตและเซฟลง Cache ในเครื่อง)
         window.handleHubResponse = function(res) {
             document.getElementById('sync-indicator').style.display = 'none';
             if (res && res.status === "success") {
                 const urlParams = new URLSearchParams(window.location.search);
                 let shopNameParam = urlParams.get('shop') || 'DEMOPOS';
 
-                // เขียนทับข้อมูลแสดงผลหน้าจอปัจจุบันให้ล่าสุดตรงตามชีต
                 renderHubUI(res.shop, res.data);
-
-                // บันทึกเก็บค่าลง Cache ความเร็วสูงของบราวเซอร์
                 localStorage.setItem('hub_cache_' + shopNameParam, JSON.stringify(res));
             }
         };
 
-        // ⚡ เริ่มต้นกระบวนการ Hybrid Fast-Load
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             let shopName = urlParams.get('shop') || 'DEMOPOS';
             
-            // 1. ดึงข้อมูลจาก Cache ในเครื่องขึ้นมาเปิดปุ่มให้ใช้งานทันทีใน 0.1 วินาที!
             const cachedData = localStorage.getItem('hub_cache_' + shopName);
             if (cachedData) {
                 try {
                     const parsed = JSON.parse(cachedData);
                     renderHubUI(parsed.shop, parsed.data);
-                } catch(e) { console.log("Cache error, rolling back to direct fetch."); }
+                } catch(e) { console.log("Cache recovery error."); }
             } else {
-                // ถ้าเพิ่งเปิดเครื่องครั้งแรกสุด ๆ และยังไม่มี Cache ให้ขึ้นสถานะแจ้งเตือนไว้
                 document.getElementById('shopTitleDisplay').innerText = "กำลังซิงค์ข้อมูล...";
             }
 
-            // 2. สั่งเปิดสเตตัสซิงค์ แอบยิงไปคุยกับกูเกิลชีตเงียบ ๆ เพื่อดึงอัปเดตใหม่
             document.getElementById('sync-indicator').style.display = 'block';
             
             const connector = Master_GAS_URL.includes('?') ? '&' : '?';
