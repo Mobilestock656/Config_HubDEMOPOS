@@ -343,8 +343,11 @@
                 guestGrid.innerHTML = '';
 
                 // เปลี่ยนข้อความหัวข้อตามชื่อร้านที่ระบุ
-                document.getElementById('shopTitleDisplay').innerText = res.shop;
-                document.getElementById('footerShopName').innerText = res.shop.toUpperCase();
+               <div class="header">
+                <h1 class="logo-text" id="shopTitleDisplay">กำลังโหลด...</h1>
+                <div class="accent-line"></div>
+                <p>Management Hub & Digital Services</p>
+               </div>
 
                 // จัดเรียงการ์ดลงหมวดหมู่
                 Object.keys(config).forEach(key => {
