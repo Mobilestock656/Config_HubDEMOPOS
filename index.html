@@ -33,7 +33,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Minimal Header แบบหน้าเว็บใหญ่ */
         .header {
             text-align: center;
             padding: 50px 20px 35px;
@@ -67,7 +66,6 @@
             text-transform: uppercase;
         }
 
-        /* Container สไตล์เว็บระดับองค์กรใหญ่ */
         .container {
             max-width: 1200px;
             width: 100%;
@@ -75,13 +73,7 @@
             padding: 0 30px;
             box-sizing: border-box;
             flex: 1;
-            opacity: 0;
-            transition: opacity 0.35s ease;
-            display: none;
-        }
-        .container.loaded { 
-            display: block;
-            opacity: 1; 
+            display: block; /* ⚡ เปิดหน้าต่างให้แสดงผลทันที ไม่ล็อกจอ */
         }
 
         .hub-section { margin-bottom: 35px; }
@@ -105,7 +97,6 @@
             background: linear-gradient(90deg, #E2E8F0, transparent);
         }
 
-        /* Clean Card Grid แบบหน้าเว็บใหญ่เคลียร์ ๆ */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -190,12 +181,11 @@
         .card-title { font-size: 1.05rem; font-weight: 600; color: #0F172A; margin: 0 0 4px 0; }
         .card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 16px 0; flex: 1; font-weight: 400; }
 
-        /* 🌟 ปรับขนาดปุ่มแต่ละฟังก์ชันให้มีมิติ เล็กลง คลีนตา มีความหรูหรากระชับขึ้น */
         .card-action-btn {
             background-color: var(--primary);
             color: white;
             text-align: center;
-            padding: 10px 14px; /* ปรับขนาดปุ่มให้เล็กลงและกระชับตามดีไซน์เว็บใหญ่ */
+            padding: 10px 14px;
             border-radius: 8px;
             font-weight: 500;
             font-size: 0.88rem;
@@ -285,7 +275,7 @@
         .app-modal-window.minimized .app-modal-body { display: none !important; }
         
         .app-modal-header {
-            padding: 12px 20px;
+            padding: 14px 20px;
             background-color: #FFFFFF;
             border-bottom: 1px solid #F1F5F9;
             display: flex;
@@ -325,11 +315,12 @@
         .footer { text-align: center; padding: 24px 20px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid #E2E8F0; background-color: var(--panel-bg); }
         .footer span { color: var(--primary); font-weight: 600; }
 
-        /* Loader */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FFFFFF; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 99999; }
-        .spinner { width: 32px; height: 36px; border: 2.5px solid #E2E8F0; border-top: 2.5px solid var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #loader p { color: var(--primary); margin-top: 14px; font-weight: 500; font-size: 0.8rem; letter-spacing: 1px; }
+        /* ⚡ ปรับปรุงสเตตัสโหลดแบคเบราวด์จิ๋วสีทองมุมขวาบน เพื่อไม่รบกวนการทำงานหลัก */
+        #sync-indicator {
+            position: fixed; top: 12px; right: 12px; background: rgba(0, 121, 107, 0.9);
+            color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.72rem;
+            font-weight: 500; display: none; z-index: 99999; box-shadow: var(--shadow-sm);
+        }
 
         .toast { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: #0F172A; color: white; padding: 10px 24px; border-radius: 30px; font-size: 0.85rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 9999; transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px; font-weight: 500; }
         .toast.show { bottom: 30px; }
@@ -337,10 +328,7 @@
 </head>
 <body>
 
-    <div id="loader">
-        <div class="spinner"></div>
-        <p>กำลังเข้าสู่บริการ...</p>
-    </div>
+    <div id="sync-indicator">🔄 กำลังอัปเดตระบบ...</div>
 
     <div class="header">
         <h1 class="logo-text" id="shopTitleDisplay">MIRA HAIR STUDIO</h1>
@@ -348,7 +336,7 @@
         <p>Management Hub & Digital Services</p>
     </div>
 
-    <div class="container" id="mainContainer">
+    <div class="container loaded" id="mainContainer">
         <div class="hub-section">
             <div class="section-header">Internal Management System</div>
             <div class="grid" id="internalGrid"></div>
@@ -392,7 +380,6 @@
             
             let clickAction = "";
             if (data.active) {
-                // 🌟 ดึงข้อมูลลิงก์ไปรันใน Modal ตรง ๆ ทุกปุ่มเพื่อความปลอดภัย
                 clickAction = `onclick="openAppModal('${data.url}', '${data.title}')"`;
             } else {
                 clickAction = `onclick="alert('${data.errorMsg}')"`;
@@ -417,7 +404,6 @@
             return card;
         }
 
-        // ฟังก์ชันเปิดหน้าต่างย่อยซ้อนระบบหลัก
         function openAppModal(url, title) {
             const overlay = document.getElementById('appModalOverlay');
             const win = document.getElementById('appModalWindow');
@@ -428,7 +414,6 @@
             document.getElementById('appModalTitle').innerText = title;
             document.getElementById('appModalIframe').src = url;
             
-            // ตรวจสอบความกว้าง: ถ้าเป็นฟังก์ชันสต๊อก (stock) หรือคิดเงิน (pos) ให้จัดสัดส่วนฟูลสกรีนเต็มหน้าจอทันทีเพื่อความชัดเจน
             let lowerUrl = url.toLowerCase();
             if (lowerUrl.includes('pos') || lowerUrl.includes('stock') || lowerUrl.includes('mobilestock')) {
                 win.classList.add('fullscreen');
@@ -449,10 +434,7 @@
         }
 
         function minimizeAppModal(event, forceRestore = false) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
+            if (event) { e.preventDefault(); event.stopPropagation(); }
             const overlay = document.getElementById('appModalOverlay');
             const win = document.getElementById('appModalWindow');
             
@@ -483,42 +465,63 @@
             }).catch(() => alert('ไม่สามารถคัดลอกลิงก์ได้'));
         }
 
+        // Render หน้าจอการ์ดปุ่มกด
+        function renderHubUI(shopName, resData) {
+            const internalGrid = document.getElementById('internalGrid');
+            const guestGrid = document.getElementById('guestGrid');
+
+            internalGrid.innerHTML = '';
+            guestGrid.innerHTML = '';
+
+            document.getElementById('shopTitleDisplay').innerText = shopName;
+            document.getElementById('footerShopName').innerText = shopName.toUpperCase();
+
+            Object.keys(resData).forEach(key => {
+                const item = resData[key];
+                const cardElement = createCard(key, item);
+                
+                if (item.type === "staff") {
+                    internalGrid.appendChild(cardElement);
+                } else if (item.type === "customer") {
+                    guestGrid.appendChild(cardElement);
+                }
+            });
+        }
+
+        // 🌟 ฟังก์ชันรับคำสั่ง JSONP จาก Google Apps Script (แอบอัปเดตและเซฟลง Cache ในเครื่อง)
         window.handleHubResponse = function(res) {
+            document.getElementById('sync-indicator').style.display = 'none';
             if (res && res.status === "success") {
-                const config = res.data;
-                const internalGrid = document.getElementById('internalGrid');
-                const guestGrid = document.getElementById('guestGrid');
+                const urlParams = new URLSearchParams(window.location.search);
+                let shopNameParam = urlParams.get('shop') || 'DEMOPOS';
 
-                internalGrid.innerHTML = '';
-                guestGrid.innerHTML = '';
+                // เขียนทับข้อมูลแสดงผลหน้าจอปัจจุบันให้ล่าสุดตรงตามชีต
+                renderHubUI(res.shop, res.data);
 
-                document.getElementById('shopTitleDisplay').innerText = res.shop;
-                document.getElementById('footerShopName').innerText = res.shop.toUpperCase();
-
-                Object.keys(config).forEach(key => {
-                    const item = config[key];
-                    const cardElement = createCard(key, item);
-                    
-                    if (item.type === "staff") {
-                        internalGrid.appendChild(cardElement);
-                    } else if (item.type === "customer") {
-                        guestGrid.appendChild(cardElement);
-                    }
-                });
-
-                document.getElementById('loader').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loader').style.display = 'none';
-                    document.getElementById('mainContainer').classList.add('loaded');
-                }, 300);
-            } else {
-                alert("เกิดข้อผิดพลาดจากฝั่งสเปรดชีต: " + (res ? res.msg : 'Unknown'));
+                // บันทึกเก็บค่าลง Cache ความเร็วสูงของบราวเซอร์
+                localStorage.setItem('hub_cache_' + shopNameParam, JSON.stringify(res));
             }
         };
 
+        // ⚡ เริ่มต้นกระบวนการ Hybrid Fast-Load
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             let shopName = urlParams.get('shop') || 'DEMOPOS';
+            
+            // 1. ดึงข้อมูลจาก Cache ในเครื่องขึ้นมาเปิดปุ่มให้ใช้งานทันทีใน 0.1 วินาที!
+            const cachedData = localStorage.getItem('hub_cache_' + shopName);
+            if (cachedData) {
+                try {
+                    const parsed = JSON.parse(cachedData);
+                    renderHubUI(parsed.shop, parsed.data);
+                } catch(e) { console.log("Cache error, rolling back to direct fetch."); }
+            } else {
+                // ถ้าเพิ่งเปิดเครื่องครั้งแรกสุด ๆ และยังไม่มี Cache ให้ขึ้นสถานะแจ้งเตือนไว้
+                document.getElementById('shopTitleDisplay').innerText = "กำลังซิงค์ข้อมูล...";
+            }
+
+            // 2. สั่งเปิดสเตตัสซิงค์ แอบยิงไปคุยกับกูเกิลชีตเงียบ ๆ เพื่อดึงอัปเดตใหม่
+            document.getElementById('sync-indicator').style.display = 'block';
             
             const connector = Master_GAS_URL.includes('?') ? '&' : '?';
             const jsonpUrl = `${Master_GAS_URL}${connector}action=getHubConfig&shop=${encodeURIComponent(shopName)}&callback=handleHubResponse`;
@@ -526,7 +529,7 @@
             const script = document.createElement('script');
             script.src = jsonpUrl;
             script.onerror = function() {
-                alert("การเชื่อมต่อล้มเหลว กรุณาตรวจสอบสถานะสิทธิ์การตั้งค่าแชร์ในกูเกิลชีต หรือยืนยันรหัส Deployment ใหม่ของระบบ");
+                document.getElementById('sync-indicator').style.display = 'none';
             };
             document.body.appendChild(script);
         });
