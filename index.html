@@ -210,7 +210,7 @@
         .card:not(.disabled):hover .card-action-btn { background-color: var(--primary-hover); }
         .card.disabled .card-action-btn { background-color: #94A3B8; color: #E2E8F0; box-shadow: none; }
 
-        /* 🎛️ ULTRA PREMIUM MODAL OVERLAY STYLES */
+        /* 🎛️ PREMIUM MODAL OVERLAY STYLES */
         .app-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -230,7 +230,14 @@
             pointer-events: auto;
         }
         
-        /* การจัดหน้าต่างสไตล์ macOS Window */
+        /* แก้ไขเลเยอร์เมื่อถูกสั่งย่อขนาด ให้หลีกทางนิ้วกด */
+        .app-modal-overlay.is-minimized {
+            background-color: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            pointer-events: none !important;
+        }
+        
         .app-modal-window {
             background-color: #FFFFFF;
             width: 100%;
@@ -243,19 +250,20 @@
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-xl);
+            pointer-events: auto; /* ให้รับการคลิกปกติ */
         }
         
         @media (min-width: 576px) {
             .app-modal-window {
                 width: 90%;
-                max-width: 480px; /* บีบหน้าจอให้เป็นขนาด Mobile App เริ่มต้นเพื่อความเหมาะสม */
+                max-width: 480px; 
                 height: 85vh;
                 max-height: 760px;
                 border-radius: 20px;
             }
         }
         
-        /* 👑 บังคับขยายเต็มจอ (Full Screen Mode) */
+        /* Full Screen Mode */
         .app-modal-window.fullscreen {
             width: 100% !important;
             max-width: 100% !important;
@@ -265,24 +273,24 @@
             top: 0 !important; left: 0 !important; transform: none !important;
         }
 
-        /* 🟡 บังคับย่อขนาดไว้มุมจอ (Minimized Mode) */
+        /* Minimized Mode */
         .app-modal-window.minimized {
             position: fixed !important;
             bottom: 20px !important;
             right: 20px !important;
-            width: 260px !important;
-            height: 50px !important;
+            width: 280px !important;
+            height: 54px !important;
             top: auto !important; left: auto !important;
-            border-radius: 12px !important;
+            border-radius: 14px !important;
             transform: none !important;
-            z-index: 9999999;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            z-index: 99999999 !important;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+            border: 1px solid var(--primary);
         }
         .app-modal-window.minimized .app-modal-body {
-            display: none !important; /* ซ่อนไอฟรมด้านในไว้ชั่วคราว */
+            display: none !important; 
         }
         
-        /* แถบควบคุมบนหน้าต่างย่อย (macOS Window Top Bar) */
         .app-modal-header {
             padding: 14px 20px;
             background-color: #FFFFFF;
@@ -294,7 +302,7 @@
             user-select: none;
         }
         
-        /* 🔴 🟡 🟢 ปุ่มควบคุมสไตล์ macOS (แยกเลเยอร์ออกมาอยู่นอก iFrame หายขาดเรื่องกดไม่ติด) */
+        /* macOS Controls */
         .mac-controls {
             display: flex;
             gap: 8px;
@@ -337,13 +345,13 @@
             flex: 1;
         }
         
-        /* ปุ่มเปิดหน้าต่างที่โดนย่อค้างไว้กลับขึ้นมา */
+        /* โซนดักคลิกเพื่อเปิดกลับขึ้นมาขยายจอ */
         .restore-click-zone {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             cursor: pointer;
             display: none;
-            z-index: 5;
+            z-index: 99;
         }
         .app-modal-window.minimized .restore-click-zone {
             display: block;
@@ -426,14 +434,13 @@
         // ลิงก์กลาง Master Apps Script API ของคุณ
         const Master_GAS_URL = "https://script.google.com/macros/s/AKfycbxrJzwwtaV39NFkc_LH3gkj_wEZjC9fw_e6SZei89tG3GVYuW45pkMCyWu32j6v2v4/exec";
 
-        // ฟังก์ชันสร้างการ์ดระบบ (เปิดใช้บานหน้าต่างซ้อน Modal ทุกฟังก์ชันตามคำขอ)
+        // ฟังก์ชันสร้างการ์ดระบบ
         function createCard(key, data) {
             const card = document.createElement('div');
             card.className = `card ${!data.active ? 'disabled' : ''}`;
             
             let clickAction = "";
             if (data.active) {
-                // 🌟 ปลดล็อก: บังคับให้ทุกฟังก์ชันบริการ (ทั้ง POS, สต๊อก, ลงเวลา, จอง, คูปอง) เปิดแบบหน้าจอซ้อน Modal ทั้งหมด
                 let isLargeApp = (key === 'pos') ? 'true' : 'false';
                 clickAction = `onclick="openAppModal('${data.url}', '${data.title}', ${isLargeApp})"`;
             } else {
@@ -461,14 +468,15 @@
 
         // ฟังก์ชันเปิดหน้าต่างย่อยซ้อนระบบหลัก
         function openAppModal(url, title, isLargeApp) {
+            const overlay = document.getElementById('appModalOverlay');
             const win = document.getElementById('appModalWindow');
-            win.className = "app-modal-window"; // คืนค่าเริ่มต้นล้างสถานะย่อขยายเก่า
+            
+            overlay.className = "app-modal-overlay show"; // ล้างคลาสย่อเก่าออก
+            win.className = "app-modal-window"; 
             
             document.getElementById('appModalTitle').innerText = title;
             document.getElementById('appModalIframe').src = url;
-            document.getElementById('appModalOverlay').classList.add('show');
             
-            // 🌟 ตั้งค่าอัจฉริยะ: หากกดเปิดระบบคิดเงิน POS หน้าร้าน ให้ขยายหน้าจอเต็มฟูลสกรีนให้อัตโนมัติทันที
             if (isLargeApp) {
                 win.classList.add('fullscreen');
             }
@@ -477,17 +485,18 @@
             document.body.style.width = '100%';
         }
 
-        // 🔴 ฟังก์ชันปุ่มสีแดง: ปิดหน้าต่างย่อย คืนสิทธิ์จอหลักหลังบ้าน
+        // 🔴 ฟังก์ชันปิดหน้าต่างย่อย
         function closeAppModal(force = false) {
             if (force) {
-                document.getElementById('appModalOverlay').classList.remove('show');
+                const overlay = document.getElementById('appModalOverlay');
+                overlay.className = "app-modal-overlay";
                 document.getElementById('appModalIframe').src = ""; 
                 document.body.style.position = '';
                 document.body.style.width = '';
             }
         }
 
-        // 🟡 ฟังก์ชันปุ่มสีเหลือง: ย่อหน้าต่างย่อยค้างระบบไว้มุมขวาล่าง
+        // 🟡 ฟังก์ชันย่อหน้าต่างย่อย (ปรับปรุงระบบเคลียร์เลเยอร์โปร่งแสง)
         function minimizeAppModal(event, forceRestore = false) {
             if (event) {
                 event.preventDefault();
@@ -498,25 +507,22 @@
             const win = document.getElementById('appModalWindow');
             
             if (win.classList.contains('minimized') || forceRestore) {
-                // หากหน้าจอย่ออยู่ -> กู้คืนกลับมาขนาดปกติ
+                // 🟢 ก้าวเข้าสู่สถานะ: ขยายกลับขึ้นมาขนาดปกติ
                 win.classList.remove('minimized');
-                overlay.style.backgroundColor = "rgba(15, 23, 42, 0.4)";
-                overlay.style.pointerEvents = "auto";
+                overlay.classList.remove('is-minimized');
                 document.body.style.position = 'fixed';
             } else {
-                // หากหน้าจอปกติ -> ทำการย่อหน้าต่างลงไปมุมขวาล่าง
-                win.className = "app-modal-window minimized"; // ล้างคลาส fullscreen ออกอัตโนมัติ
-                overlay.style.backgroundColor = "transparent";
-                overlay.style.pointerEvents = "none"; // เปิดทางให้กดปุ่มการ์ดแผ่นอื่นด้านหลังได้ปกติ
+                // 🟡 ก้าวเข้าสู่สถานะ: พับเก็บลงมุมขวาล่าง
+                win.className = "app-modal-window minimized"; 
+                overlay.classList.add('is-minimized'); // ปลดล็อกไม่ให้เลื่อนกระจกฝ้าบังหน้าจอหลัก
                 document.body.style.position = '';
             }
         }
 
-        // 🟢 ฟังก์ชันปุ่มสีเขียว: ขยายหน้าต่างย่อยสลับสัดส่วน เต็มจอ / ขนาดปกติ (Toggle)
+        // 🟢 ฟังก์ชันสลับฟูลสกรีน
         function toggleFullscreenAppModal() {
             const win = document.getElementById('appModalWindow');
-            if (win.classList.contains('minimized')) return; // ถ้าย่ออยู่ห้ามกดขยาย
-            
+            if (win.classList.contains('minimized')) return;
             win.classList.toggle('fullscreen');
         }
 
