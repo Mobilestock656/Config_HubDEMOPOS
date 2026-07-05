@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MANAGEMENT HUB — Digital Services Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght=200;300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -30,12 +30,14 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* Minimal Header */
         .header {
             text-align: center;
-            padding: 60px 20px 40px;
+            padding: 40px 20px;
             background-color: var(--panel-bg);
             border-bottom: 1px solid var(--border-color);
             box-shadow: var(--shadow-sm);
@@ -43,7 +45,7 @@
 
         .header .logo-text {
             font-weight: 600;
-            font-size: 2.2rem;
+            font-size: 2rem;
             letter-spacing: 1px;
             margin: 0;
             color: var(--text-main);
@@ -51,16 +53,16 @@
         }
 
         .header .accent-line {
-            width: 60px;
+            width: 50px;
             height: 1px;
             background-color: var(--primary);
-            margin: 20px auto;
+            margin: 15px auto;
             opacity: 0.3;
         }
 
         .header p {
-            margin: 8px 0 0 0;
-            font-size: 0.9rem;
+            margin: 6px 0 0 0;
+            font-size: 0.85rem;
             font-weight: 400;
             color: var(--text-muted);
             letter-spacing: 2px;
@@ -71,8 +73,8 @@
         .container {
             max-width: 1140px;
             width: 100%;
-            margin: 40px auto 60px;
-            padding: 0 24px;
+            margin: 30px auto 60px;
+            padding: 0 20px;
             box-sizing: border-box;
             flex: 1;
             opacity: 0;
@@ -84,18 +86,18 @@
             opacity: 1; 
         }
 
-        .hub-section { margin-bottom: 45px; }
+        .hub-section { margin-bottom: 40px; }
 
         .section-header {
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 600;
             letter-spacing: 1px;
             color: var(--primary);
             text-transform: uppercase;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .section-header::after {
@@ -105,21 +107,25 @@
             background: linear-gradient(90deg, var(--border-color), transparent);
         }
 
-        /* Clean White Grid & Cards */
+        /* Responsive Grid */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
 
         .card {
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 30px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             box-shadow: var(--shadow-sm);
         }
@@ -134,15 +140,12 @@
             cursor: pointer;
         }
 
-        .card:not(.disabled):hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: #CBD5E1;
-        }
+        .card:not(.disabled):hover { border-color: #CBD5E1; }
+        .card:not(.disabled):active { transform: scale(0.98); background-color: #F8FAFC; }
 
         .card.disabled {
             background-color: #F1F5F9;
-            opacity: 0.6;
+            opacity: 0.55;
             cursor: not-allowed;
             border-color: var(--border-color);
             box-shadow: none;
@@ -152,25 +155,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .card-badge {
             font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             color: var(--primary);
             border: 1px solid #CCFBF1;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-weight: 600;
             background: #E6F4F1;
         }
-        .card.disabled .card-badge { 
-            color: #DC2626; 
-            border-color: #FEE2E2; 
-            background: #FEE2E2;
-        }
+        .card.disabled .card-badge { color: #DC2626; border-color: #FEE2E2; background: #FEE2E2; }
 
         .meta-right { display: flex; align-items: center; gap: 12px; }
 
@@ -179,8 +178,8 @@
             border: 1px solid var(--border-color);
             color: var(--text-muted);
             border-radius: 50%;
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -189,52 +188,34 @@
             transition: all 0.2s ease;
             z-index: 10;
         }
-        .btn-share:hover { background: #E2E8F0; color: var(--text-main); border-color: #CBD5E1; }
+        .btn-share:active { background: #E2E8F0; }
 
-        .card-icon { font-size: 1.8rem; }
+        .card-icon { font-size: 1.6rem; }
+        .card-title { font-size: 1.15rem; font-weight: 600; color: var(--text-main); margin: 0 0 8px 0; }
+        .card-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 20px 0; flex: 1; font-weight: 300; }
 
-        .card-title { 
-            font-size: 1.2rem; 
-            font-weight: 600; 
-            color: var(--text-main); 
-            margin: 0 0 10px 0; 
-        }
-        .card-desc { 
-            font-size: 0.9rem; 
-            color: var(--text-muted); 
-            line-height: 1.6; 
-            margin: 0 0 25px 0; 
-            flex: 1; 
-            font-weight: 300; 
-        }
-
-        /* Solid UI Action Buttons */
         .card-action-btn {
             background-color: var(--primary);
             color: white;
             text-align: center;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 14px;
+            border-radius: 12px;
             font-weight: 600;
             font-size: 0.95rem;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.15s ease;
             margin-top: auto;
             box-shadow: 0 2px 4px rgba(0, 121, 107, 0.1);
+            user-select: none;
         }
-        .card:not(.disabled):hover .card-action-btn {
-            background-color: var(--primary-hover);
-        }
-        .card.disabled .card-action-btn {
-            background-color: #94A3B8;
-            color: #E2E8F0;
-            box-shadow: none;
-        }
+        .card:not(.disabled):hover .card-action-btn { background-color: var(--primary-hover); }
+        .card:not(.disabled):active .card-action-btn { background-color: var(--primary-hover); opacity: 0.9; }
+        .card.disabled .card-action-btn { background-color: #94A3B8; color: #E2E8F0; box-shadow: none; }
 
-        /* 🌟 LUXURY MODAL POPUP STYLES (ส่วนหน้าจอซ้อนระบบย่อย) */
+        /* 📱 LUXURY MODAL POPUP (ปรับโครงสร้างปุ่มปิดใหม่แยกเป็นอิสระ) */
         .app-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(15, 23, 42, 0.4);
+            background-color: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             display: flex;
@@ -243,7 +224,7 @@
             z-index: 999999;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.25s ease;
         }
         .app-modal-overlay.show {
             opacity: 1;
@@ -251,104 +232,91 @@
         }
         .app-modal-window {
             background-color: #FFFFFF;
-            width: 90%;
-            max-width: 480px; /* บังคับขนาดกะทัดรัดสไตล์ Mobile Application ให้พอดีกับหน้าลงเวลาและหน้าคูปอง */
-            height: 85vh;
-            max-height: 720px;
-            border-radius: 24px;
-            box-shadow: var(--shadow-xl);
-            border: 1px solid var(--border-color);
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            transform: translateY(20px) scale(0.98);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateY(30px);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .app-modal-overlay.show .app-modal-window {
-            transform: translateY(0) scale(1);
+        
+        @media (min-width: 576px) {
+            .app-modal-window {
+                width: 90%;
+                max-width: 480px; 
+                height: 90vh; /* 🌟 ขยายความสูงเพิ่มขึ้นเพื่อแก้ปัญหากรณีจอสั้น */
+                max-height: 800px;
+                border-radius: 24px;
+                border: 1px solid var(--border-color);
+                box-shadow: var(--shadow-xl);
+                transform: translateY(20px) scale(0.98);
+            }
         }
+        
         .app-modal-header {
-            padding: 16px 24px;
+            padding: 16px 20px;
             background-color: #FFFFFF;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            min-height: 60px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 9999999; /* 🌟 ดันหัวตารางให้อยู่ด้านบนสุดเสมอเพื่อป้องกัน iFrame ทับซ้อน */
         }
-        .app-modal-header h3 {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
+        .app-modal-header h3 { margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
+        
+        /* 🌟 ปรับปรุงปุ่มปิด (กากบาท) ให้แยกเลเยอร์ออกมาตัดขาดเพื่อป้องกันการกดไม่ติด */
         .app-modal-close-btn {
-            background: #F1F5F9;
+            background-color: #F1F5F9;
             border: none;
-            color: var(--text-muted);
-            width: 32px;
-            height: 32px;
+            color: var(--text-main);
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            font-size: 1.1rem;
+            font-size: 1.4rem;
+            font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
+            position: relative;
+            z-index: 100;
         }
-        .app-modal-close-btn:hover {
-            background: #E2E8F0;
-            color: var(--text-main);
-        }
+        .app-modal-close-btn:active { background-color: #CBD5E1; transform: scale(0.92); }
+        
         .app-modal-body {
             flex: 1;
             width: 100%;
             height: 100%;
             background-color: #F8FAFC;
             position: relative;
+            -webkit-overflow-scrolling: touch;
         }
-        .app-modal-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
+        .app-modal-iframe { width: 100%; height: 100%; border: none; display: block; }
 
         /* Clean Footer */
         .footer { 
             text-align: center; 
-            padding: 30px 20px; 
-            font-size: 0.85rem; 
+            padding: 24px 20px; 
+            font-size: 0.8rem; 
             color: var(--text-muted); 
             border-top: 1px solid var(--border-color); 
             background-color: var(--panel-bg);
-            font-weight: 400; 
         }
         .footer span { color: var(--primary); font-weight: 600; }
 
         /* Minimal Loader */
-        #loader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #FFFFFF;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-            transition: opacity 0.4s ease;
-        }
-        .spinner {
-            width: 40px; height: 40px;
-            border: 3px solid #E2E8F0;
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FFFFFF; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 99999; transition: opacity 0.4s ease; }
+        .spinner { width: 36px; height: 36px; border: 3px solid #E2E8F0; border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #loader p { color: var(--primary); margin-top: 20px; font-weight: 500; font-size: 0.85rem; letter-spacing: 1px; }
+        #loader p { color: var(--primary); margin-top: 16px; font-weight: 500; font-size: 0.85rem; letter-spacing: 1px; }
 
-        .toast { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: #0F172A; color: white; padding: 12px 28px; border-radius: 30px; font-size: 0.9rem; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 9999; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px; font-weight: 500; }
-        .toast.show { bottom: 40px; }
+        .toast { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: #0F172A; color: white; padding: 12px 28px; border-radius: 30px; font-size: 0.88rem; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 9999; transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px; font-weight: 500; white-space: nowrap; }
+        .toast.show { bottom: 30px; }
     </style>
 </head>
 <body>
@@ -382,7 +350,7 @@
                 <button class="app-modal-close-btn" onclick="closeAppModal(force=true)">&times;</button>
             </div>
             <div class="app-modal-body">
-                <iframe id="appModalIframe" class="app-modal-iframe" src="" allow="camera; geolocation; microphone; autoplay; encrypted-media;"></iframe>
+                <iframe id="appModalIframe" class="app-modal-iframe" src="" allow="camera *; geolocation *; microphone *; autoplay; encrypted-media;"></iframe>
             </div>
         </div>
     </div>
@@ -394,7 +362,7 @@
     <div id="toastNotification" class="toast">✨ คัดลอกลิงก์เรียบร้อยแล้ว</div>
 
     <script>
-        // ลิงก์กลาง Master Apps Script API
+        // ลิงก์กลาง Master Apps Script API ของคุณ
         const Master_GAS_URL = "https://script.google.com/macros/s/AKfycbxrJzwwtaV39NFkc_LH3gkj_wEZjC9fw_e6SZei89tG3GVYuW45pkMCyWu32j6v2v4/exec";
 
         // ฟังก์ชันสร้างการ์ดระบบ
@@ -402,8 +370,6 @@
             const card = document.createElement('div');
             card.className = `card ${!data.active ? 'disabled' : ''}`;
             
-            // 🌟 ปรับเปลี่ยนเงื่อนไข: หากระบบเปิดใช้งานอยู่ และเป็นคีย์ความละเอียดอ่อนสูง (ระบบลงเวลา, ระบบคูปอง, ระบบจอง) 
-            // ให้รันคำสั่ง openAppModal เพื่อเด้งหน้าต่างย่อยซ้อนขึ้นมาแทนการเปิดเว็บหน้าใหม่ครับ
             let clickAction = "";
             if (data.active) {
                 if (key === 'attendance' || key === 'coupon' || key === 'booking') {
@@ -434,20 +400,24 @@
             return card;
         }
 
-        // ฟังก์ชันเปิดหน้าต่างย่อยแบบกระจกฝ้าซ้อนหน้าร้านหลัก
+        // ฟังก์ชันเปิดหน้าต่างย่อยซ้อนระบบหลัก
         function openAppModal(url, title) {
             document.getElementById('appModalTitle').innerText = title;
             document.getElementById('appModalIframe').src = url;
             document.getElementById('appModalOverlay').classList.add('show');
-            document.body.style.overflow = 'hidden'; // ล็อกหน้าร้านหลักด้านหลังไม่ให้เลื่อนไถลไหลไปมา
+            
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
         }
 
-        // ฟังก์ชันปิดหน้าต่างย่อยคืนค่าความคลีน
+        // ฟังก์ชันปิดหน้าต่างย่อย
         function closeAppModal(event = null, force = false) {
             if (force || event.target.id === "appModalOverlay") {
                 document.getElementById('appModalOverlay').classList.remove('show');
-                document.getElementById('appModalIframe').src = ""; // ล้างหน่วยความจำ iFrame เพื่อตัดสัญญาณกล้องและ GPS ทันทีเมื่อปิดหน้าจอ
-                document.body.style.overflow = 'auto'; // คืนสิทธิ์ให้เลื่อนหน้าร้านหลักได้ปกติ
+                document.getElementById('appModalIframe').src = ""; 
+                
+                document.body.style.position = '';
+                document.body.style.width = '';
             }
         }
 
@@ -472,14 +442,12 @@
                 internalGrid.innerHTML = '';
                 guestGrid.innerHTML = '';
 
-                // เปลี่ยนข้อความหัวข้อตามชื่อร้านที่ดึงมาจากฝั่ง Google Sheet จริง
                 document.getElementById('shopTitleDisplay').innerText = res.shop;
                 document.getElementById('footerShopName').innerText = res.shop.toUpperCase();
 
-                // จัดเรียงการ์ดลงหมวดหมู่
                 Object.keys(config).forEach(key => {
                     const item = config[key];
-                    const cardElement = createCard(key, item); // ส่งค่า key เข้าไปด้วยเพื่อนำไปวิเคราะห์คัดกรองการเปิด Modal
+                    const cardElement = createCard(key, item);
                     
                     if (item.type === "staff") {
                         internalGrid.appendChild(cardElement);
@@ -488,7 +456,6 @@
                     }
                 });
 
-                // ปิดสกรีนดาวน์โหลด แสดงคอนเทนต์
                 document.getElementById('loader').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('loader').style.display = 'none';
@@ -499,7 +466,7 @@
             }
         };
 
-        // เริ่มต้นยิงขอข้อมูลแบบเทคนิค JSONP ทันทีเมื่อเปิดหน้ากระดาน
+        // ดึงข้อมูลแบบเทคนิค JSONP ป้องกัน CORS
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             let shopName = urlParams.get('shop') || 'DEMOPOS';
