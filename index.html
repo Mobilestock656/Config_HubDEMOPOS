@@ -1,11 +1,398 @@
-// ฟังก์ชันสร้างการ์ดระบบ
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MANAGEMENT HUB — Digital Services Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #FAFAFA;
+            --panel-bg: #FFFFFF;
+            --primary: #00796B;
+            --primary-hover: #004D40;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border-color: #F1F5F9;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.02);
+            --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 10px 10px -5px rgba(15, 23, 42, 0.03);
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-main);
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Minimal Header แบบหน้าเว็บใหญ่ */
+        .header {
+            text-align: center;
+            padding: 50px 20px 35px;
+            background-color: var(--panel-bg);
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .header .logo-text {
+            font-weight: 600;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            margin: 0;
+            color: #0F172A;
+            text-transform: uppercase;
+        }
+
+        .header .accent-line {
+            width: 40px;
+            height: 1px;
+            background-color: var(--primary);
+            margin: 12px auto;
+            opacity: 0.4;
+        }
+
+        .header p {
+            margin: 4px 0 0 0;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Container สไตล์เว็บระดับองค์กรใหญ่ */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 25px auto 50px;
+            padding: 0 30px;
+            box-sizing: border-box;
+            flex: 1;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            display: none;
+        }
+        .container.loaded { 
+            display: block;
+            opacity: 1; 
+        }
+
+        .hub-section { margin-bottom: 35px; }
+
+        .section-header {
+            font-size: 0.88rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, #E2E8F0, transparent);
+        }
+
+        /* Clean Card Grid แบบหน้าเว็บใหญ่เคลียร์ ๆ */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s ease-in-out;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .card:not(.disabled):hover { 
+            border-color: #CBD5E1;
+            box-shadow: var(--shadow-md);
+        }
+        .card:not(.disabled):active { transform: scale(0.99); background-color: #FAFAFA; }
+
+        .card.disabled {
+            background-color: #F8FAFC;
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-badge {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary);
+            border: 1px solid #E6F4F1;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            background: #E6F4F1;
+        }
+        .card.disabled .card-badge { color: #64748B; border-color: #E2E8F0; background: #E2E8F0; }
+
+        .meta-right { display: flex; align-items: center; gap: 10px; }
+
+        .btn-share {
+            background: #FAFAFA;
+            border: 1px solid #E2E8F0;
+            color: var(--text-muted);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        .btn-share:hover { background: #F1F5F9; color: #0F172A; }
+
+        .card-icon { font-size: 1.4rem; }
+        .card-title { font-size: 1.05rem; font-weight: 600; color: #0F172A; margin: 0 0 4px 0; }
+        .card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 16px 0; flex: 1; font-weight: 400; }
+
+        /* 🌟 ปรับขนาดปุ่มแต่ละฟังก์ชันให้มีมิติ เล็กลง คลีนตา มีความหรูหรากระชับขึ้น */
+        .card-action-btn {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 10px 14px; /* ปรับขนาดปุ่มให้เล็กลงและกระชับตามดีไซน์เว็บใหญ่ */
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.88rem;
+            transition: background-color 0.15s ease;
+            margin-top: auto;
+            user-select: none;
+        }
+        .card:not(.disabled):hover .card-action-btn { background-color: var(--primary-hover); }
+        .card.disabled .card-action-btn { background-color: #94A3B8; color: #E2E8F0; }
+
+        /* 🎛️ PREMIUM MODAL OVERLAY STYLES */
+        .app-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.35);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s ease-out;
+        }
+        .app-modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .app-modal-overlay.is-minimized {
+            background-color: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            pointer-events: none !important;
+        }
+        
+        .app-modal-window {
+            background-color: #FFFFFF;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            transform: translateY(20px);
+            transition: all 0.25s ease-out;
+            border: 1px solid #E2E8F0;
+            box-shadow: var(--shadow-xl);
+            pointer-events: auto;
+        }
+        
+        @media (min-width: 576px) {
+            .app-modal-window {
+                width: 90%;
+                max-width: 460px; 
+                height: 82vh;
+                max-height: 720px;
+                border-radius: 16px;
+            }
+        }
+        
+        /* Full Screen Mode */
+        .app-modal-window.fullscreen {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: 100% !important;
+            max-height: 100% !important;
+            border-radius: 0px !important;
+            top: 0 !important; left: 0 !important; transform: none !important;
+        }
+
+        /* Minimized Mode */
+        .app-modal-window.minimized {
+            position: fixed !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            width: 280px !important;
+            height: 52px !important;
+            top: auto !important; left: auto !important;
+            border-radius: 12px !important;
+            transform: none !important;
+            z-index: 99999999 !important;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+            border: 1px solid var(--primary);
+        }
+        .app-modal-window.minimized .app-modal-body { display: none !important; }
+        
+        .app-modal-header {
+            padding: 12px 20px;
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #F1F5F9;
+            display: flex;
+            align-items: center;
+            min-height: 52px;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        
+        /* macOS Controls */
+        .mac-controls { display: flex; gap: 8px; margin-right: 15px; }
+        .mac-dot {
+            width: 12px; height: 12px; border-radius: 50%; border: none; cursor: pointer;
+            position: relative; display: flex; align-items: center; justify-content: center;
+            padding: 0; font-size: 8px; font-weight: bold; color: transparent; transition: all 0.15s ease;
+        }
+        .mac-controls:hover .mac-dot { color: rgba(0,0,0,0.4); }
+        .mac-close { background-color: #FF5F56; }
+        .mac-minimize { background-color: #FFBD2E; }
+        .mac-expand { background-color: #27C93F; }
+        
+        .app-modal-header h3 { 
+            margin: 0; font-size: 0.95rem; font-weight: 500; color: #0F172A;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1;
+        }
+        
+        .restore-click-zone {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            cursor: pointer; display: none; z-index: 99;
+        }
+        .app-modal-window.minimized .restore-click-zone { display: block; }
+
+        .app-modal-body { flex: 1; width: 100%; height: 100%; background-color: #FAFAFA; position: relative; -webkit-overflow-scrolling: touch; }
+        .app-modal-iframe { width: 100%; height: 100%; border: none; display: block; }
+
+        /* Footer */
+        .footer { text-align: center; padding: 24px 20px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid #E2E8F0; background-color: var(--panel-bg); }
+        .footer span { color: var(--primary); font-weight: 600; }
+
+        /* Loader */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FFFFFF; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 99999; }
+        .spinner { width: 32px; height: 36px; border: 2.5px solid #E2E8F0; border-top: 2.5px solid var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #loader p { color: var(--primary); margin-top: 14px; font-weight: 500; font-size: 0.8rem; letter-spacing: 1px; }
+
+        .toast { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: #0F172A; color: white; padding: 10px 24px; border-radius: 30px; font-size: 0.85rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 9999; transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px; font-weight: 500; }
+        .toast.show { bottom: 30px; }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>กำลังเข้าสู่บริการ...</p>
+    </div>
+
+    <div class="header">
+        <h1 class="logo-text" id="shopTitleDisplay">MIRA HAIR STUDIO</h1>
+        <div class="accent-line"></div>
+        <p>Management Hub & Digital Services</p>
+    </div>
+
+    <div class="container" id="mainContainer">
+        <div class="hub-section">
+            <div class="section-header">Internal Management System</div>
+            <div class="grid" id="internalGrid"></div>
+        </div>
+        <div class="hub-section">
+            <div class="section-header">Exclusive Guest Services</div>
+            <div class="grid" id="guestGrid"></div>
+        </div>
+    </div>
+
+    <div id="appModalOverlay" class="app-modal-overlay">
+        <div id="appModalWindow" class="app-modal-window">
+            <div class="restore-click-zone" onclick="minimizeAppModal(event, forceRestore=true)"></div>
+            <div class="app-modal-header">
+                <div class="mac-controls">
+                    <button class="mac-dot mac-close" onclick="closeAppModal(force=true)" title="ปิดหน้าต่าง">✕</button>
+                    <button class="mac-dot mac-minimize" onclick="minimizeAppModal(event)" title="ย่อหน้าต่าง">⎯</button>
+                    <button class="mac-dot mac-expand" onclick="toggleFullscreenAppModal()" title="ขยายเต็มหน้าจอ">⤢</button>
+                </div>
+                <h3 id="appModalTitle">ระบบบริการ</h3>
+            </div>
+            <div class="app-modal-body">
+                <iframe id="appModalIframe" class="app-modal-iframe" src="" allow="camera *; geolocation *; microphone *; autoplay; encrypted-media;"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2026 <span id="footerShopName">MIRA HAIR STUDIO</span>. All Rights Reserved.
+    </div>
+
+    <div id="toastNotification" class="toast">✨ คัดลอกลิงก์เรียบร้อยแล้ว</div>
+
+    <script>
+        const Master_GAS_URL = "https://script.google.com/macros/s/AKfycbxrJzwwtaV39NFkc_LH3gkj_wEZjC9fw_e6SZei89tG3GVYuW45pkMCyWu32j6v2v4/exec";
+
+        // ฟังก์ชันสร้างการ์ดระบบ
         function createCard(key, data) {
             const card = document.createElement('div');
             card.className = `card ${!data.active ? 'disabled' : ''}`;
             
             let clickAction = "";
             if (data.active) {
-                // บังคับให้ทุกบริการเปิดแบบหน้าจอซ้อน Modal ทั้งหมดเพื่อความลื่นไหลสม่ำเสมอ
+                // 🌟 ดึงข้อมูลลิงก์ไปรันใน Modal ตรง ๆ ทุกปุ่มเพื่อความปลอดภัย
                 clickAction = `onclick="openAppModal('${data.url}', '${data.title}')"`;
             } else {
                 clickAction = `onclick="alert('${data.errorMsg}')"`;
@@ -41,11 +428,108 @@
             document.getElementById('appModalTitle').innerText = title;
             document.getElementById('appModalIframe').src = url;
             
-            // ตรวจสอบอัตโนมัติ: ถ้าระบบที่เปิดเป็นคิดเงินหน้าร้าน (pos) หรือคลังสินค้า (stock) ให้สั่งขยายเต็มจอใหญ่เต็มตาให้ทันที
-            if (url.toLowerCase().includes('pos') || url.toLowerCase().includes('stock')) {
+            // ตรวจสอบความกว้าง: ถ้าเป็นฟังก์ชันสต๊อก (stock) หรือคิดเงิน (pos) ให้จัดสัดส่วนฟูลสกรีนเต็มหน้าจอทันทีเพื่อความชัดเจน
+            let lowerUrl = url.toLowerCase();
+            if (lowerUrl.includes('pos') || lowerUrl.includes('stock') || lowerUrl.includes('mobilestock')) {
                 win.classList.add('fullscreen');
             }
 
             document.body.style.position = 'fixed';
             document.body.style.width = '100%';
         }
+
+        function closeAppModal(force = false) {
+            if (force) {
+                const overlay = document.getElementById('appModalOverlay');
+                overlay.className = "app-modal-overlay";
+                document.getElementById('appModalIframe').src = ""; 
+                document.body.style.position = '';
+                document.body.style.width = '';
+            }
+        }
+
+        function minimizeAppModal(event, forceRestore = false) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            const overlay = document.getElementById('appModalOverlay');
+            const win = document.getElementById('appModalWindow');
+            
+            if (win.classList.contains('minimized') || forceRestore) {
+                win.classList.remove('minimized');
+                overlay.classList.remove('is-minimized');
+                document.body.style.position = 'fixed';
+            } else {
+                win.className = "app-modal-window minimized"; 
+                overlay.classList.add('is-minimized'); 
+                document.body.style.position = '';
+            }
+        }
+
+        function toggleFullscreenAppModal() {
+            const win = document.getElementById('appModalWindow');
+            if (win.classList.contains('minimized')) return;
+            win.classList.toggle('fullscreen');
+        }
+
+        function shareLink(event, url) {
+            event.preventDefault();
+            event.stopPropagation();
+            navigator.clipboard.writeText(url).then(() => {
+                const toast = document.getElementById('toastNotification');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
+            }).catch(() => alert('ไม่สามารถคัดลอกลิงก์ได้'));
+        }
+
+        window.handleHubResponse = function(res) {
+            if (res && res.status === "success") {
+                const config = res.data;
+                const internalGrid = document.getElementById('internalGrid');
+                const guestGrid = document.getElementById('guestGrid');
+
+                internalGrid.innerHTML = '';
+                guestGrid.innerHTML = '';
+
+                document.getElementById('shopTitleDisplay').innerText = res.shop;
+                document.getElementById('footerShopName').innerText = res.shop.toUpperCase();
+
+                Object.keys(config).forEach(key => {
+                    const item = config[key];
+                    const cardElement = createCard(key, item);
+                    
+                    if (item.type === "staff") {
+                        internalGrid.appendChild(cardElement);
+                    } else if (item.type === "customer") {
+                        guestGrid.appendChild(cardElement);
+                    }
+                });
+
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('mainContainer').classList.add('loaded');
+                }, 300);
+            } else {
+                alert("เกิดข้อผิดพลาดจากฝั่งสเปรดชีต: " + (res ? res.msg : 'Unknown'));
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let shopName = urlParams.get('shop') || 'DEMOPOS';
+            
+            const connector = Master_GAS_URL.includes('?') ? '&' : '?';
+            const jsonpUrl = `${Master_GAS_URL}${connector}action=getHubConfig&shop=${encodeURIComponent(shopName)}&callback=handleHubResponse`;
+
+            const script = document.createElement('script');
+            script.src = jsonpUrl;
+            script.onerror = function() {
+                alert("การเชื่อมต่อล้มเหลว กรุณาตรวจสอบสถานะสิทธิ์การตั้งค่าแชร์ในกูเกิลชีต หรือยืนยันรหัส Deployment ใหม่ของระบบ");
+            };
+            document.body.appendChild(script);
+        });
+    </script>
+</body>
+</html>
