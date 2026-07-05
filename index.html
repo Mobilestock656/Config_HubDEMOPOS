@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MANAGEMENT HUB — Digital Services Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght=200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-main: #F8FAFC;
@@ -208,14 +208,13 @@
             user-select: none;
         }
         .card:not(.disabled):hover .card-action-btn { background-color: var(--primary-hover); }
-        .card:not(.disabled):active .card-action-btn { background-color: var(--primary-hover); opacity: 0.9; }
         .card.disabled .card-action-btn { background-color: #94A3B8; color: #E2E8F0; box-shadow: none; }
 
-        /* 📱 LUXURY MODAL POPUP (ปรับโครงสร้างปุ่มปิดใหม่แยกเป็นอิสระ) */
+        /* 🎛️ ULTRA PREMIUM MODAL OVERLAY STYLES */
         .app-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(15, 23, 42, 0.6);
+            background-color: rgba(15, 23, 42, 0.4);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             display: flex;
@@ -224,12 +223,14 @@
             z-index: 999999;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .app-modal-overlay.show {
             opacity: 1;
             pointer-events: auto;
         }
+        
+        /* การจัดหน้าต่างสไตล์ macOS Window */
         .app-modal-window {
             background-color: #FFFFFF;
             width: 100%;
@@ -237,57 +238,117 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
             transform: translateY(30px);
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-xl);
         }
         
         @media (min-width: 576px) {
             .app-modal-window {
                 width: 90%;
-                max-width: 480px; 
-                height: 90vh; /* 🌟 ขยายความสูงเพิ่มขึ้นเพื่อแก้ปัญหากรณีจอสั้น */
-                max-height: 800px;
-                border-radius: 24px;
-                border: 1px solid var(--border-color);
-                box-shadow: var(--shadow-xl);
-                transform: translateY(20px) scale(0.98);
+                max-width: 480px; /* บีบหน้าจอให้เป็นขนาด Mobile App เริ่มต้นเพื่อความเหมาะสม */
+                height: 85vh;
+                max-height: 760px;
+                border-radius: 20px;
             }
         }
         
+        /* 👑 บังคับขยายเต็มจอ (Full Screen Mode) */
+        .app-modal-window.fullscreen {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: 100% !important;
+            max-height: 100% !important;
+            border-radius: 0px !important;
+            top: 0 !important; left: 0 !important; transform: none !important;
+        }
+
+        /* 🟡 บังคับย่อขนาดไว้มุมจอ (Minimized Mode) */
+        .app-modal-window.minimized {
+            position: fixed !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            width: 260px !important;
+            height: 50px !important;
+            top: auto !important; left: auto !important;
+            border-radius: 12px !important;
+            transform: none !important;
+            z-index: 9999999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+        .app-modal-window.minimized .app-modal-body {
+            display: none !important; /* ซ่อนไอฟรมด้านในไว้ชั่วคราว */
+        }
+        
+        /* แถบควบคุมบนหน้าต่างย่อย (macOS Window Top Bar) */
         .app-modal-header {
-            padding: 16px 20px;
+            padding: 14px 20px;
             background-color: #FFFFFF;
             border-bottom: 1px solid var(--border-color);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            min-height: 60px;
+            min-height: 56px;
             box-sizing: border-box;
-            position: relative;
-            z-index: 9999999; /* 🌟 ดันหัวตารางให้อยู่ด้านบนสุดเสมอเพื่อป้องกัน iFrame ทับซ้อน */
+            user-select: none;
         }
-        .app-modal-header h3 { margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
         
-        /* 🌟 ปรับปรุงปุ่มปิด (กากบาท) ให้แยกเลเยอร์ออกมาตัดขาดเพื่อป้องกันการกดไม่ติด */
-        .app-modal-close-btn {
-            background-color: #F1F5F9;
-            border: none;
-            color: var(--text-main);
-            width: 38px;
-            height: 38px;
+        /* 🔴 🟡 🟢 ปุ่มควบคุมสไตล์ macOS (แยกเลเยอร์ออกมาอยู่นอก iFrame หายขาดเรื่องกดไม่ติด) */
+        .mac-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+        .mac-dot {
+            width: 13px;
+            height: 13px;
             border-radius: 50%;
-            font-size: 1.4rem;
-            font-weight: bold;
+            border: none;
             cursor: pointer;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 0;
+            font-size: 8px;
+            font-weight: bold;
+            color: transparent;
             transition: all 0.15s ease;
-            position: relative;
-            z-index: 100;
         }
-        .app-modal-close-btn:active { background-color: #CBD5E1; transform: scale(0.92); }
+        .mac-controls:hover .mac-dot {
+            color: rgba(0,0,0,0.5);
+        }
+        .mac-close { background-color: #FF5F56; }
+        .mac-close:hover { background-color: #E0443E; }
+        .mac-minimize { background-color: #FFBD2E; }
+        .mac-minimize:hover { background-color: #DEA123; }
+        .mac-expand { background-color: #27C93F; }
+        .mac-expand:hover { background-color: #1A9C2B; }
         
+        .app-modal-header h3 { 
+            margin: 0; 
+            font-size: 1rem; 
+            font-weight: 500; 
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+        
+        /* ปุ่มเปิดหน้าต่างที่โดนย่อค้างไว้กลับขึ้นมา */
+        .restore-click-zone {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            cursor: pointer;
+            display: none;
+            z-index: 5;
+        }
+        .app-modal-window.minimized .restore-click-zone {
+            display: block;
+        }
+
         .app-modal-body {
             flex: 1;
             width: 100%;
@@ -299,14 +360,7 @@
         .app-modal-iframe { width: 100%; height: 100%; border: none; display: block; }
 
         /* Clean Footer */
-        .footer { 
-            text-align: center; 
-            padding: 24px 20px; 
-            font-size: 0.8rem; 
-            color: var(--text-muted); 
-            border-top: 1px solid var(--border-color); 
-            background-color: var(--panel-bg);
-        }
+        .footer { text-align: center; padding: 24px 20px; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border-color); background-color: var(--panel-bg); }
         .footer span { color: var(--primary); font-weight: 600; }
 
         /* Minimal Loader */
@@ -343,11 +397,18 @@
         </div>
     </div>
 
-    <div id="appModalOverlay" class="app-modal-overlay" onclick="closeAppModal(event)">
-        <div class="app-modal-window" onclick="event.stopPropagation()">
+    <div id="appModalOverlay" class="app-modal-overlay">
+        <div id="appModalWindow" class="app-modal-window">
+            
+            <div class="restore-click-zone" onclick="minimizeAppModal(event, forceRestore=true)"></div>
+            
             <div class="app-modal-header">
+                <div class="mac-controls">
+                    <button class="mac-dot mac-close" onclick="closeAppModal(force=true)" title="ปิดหน้าต่าง">✕</button>
+                    <button class="mac-dot mac-minimize" onclick="minimizeAppModal(event)" title="ย่อหน้าต่าง">⎯</button>
+                    <button class="mac-dot mac-expand" onclick="toggleFullscreenAppModal()" title="ขยายเต็มหน้าจอ">⤢</button>
+                </div>
                 <h3 id="appModalTitle">ระบบบริการ</h3>
-                <button class="app-modal-close-btn" onclick="closeAppModal(force=true)">&times;</button>
             </div>
             <div class="app-modal-body">
                 <iframe id="appModalIframe" class="app-modal-iframe" src="" allow="camera *; geolocation *; microphone *; autoplay; encrypted-media;"></iframe>
@@ -365,18 +426,16 @@
         // ลิงก์กลาง Master Apps Script API ของคุณ
         const Master_GAS_URL = "https://script.google.com/macros/s/AKfycbxrJzwwtaV39NFkc_LH3gkj_wEZjC9fw_e6SZei89tG3GVYuW45pkMCyWu32j6v2v4/exec";
 
-        // ฟังก์ชันสร้างการ์ดระบบ
+        // ฟังก์ชันสร้างการ์ดระบบ (เปิดใช้บานหน้าต่างซ้อน Modal ทุกฟังก์ชันตามคำขอ)
         function createCard(key, data) {
             const card = document.createElement('div');
             card.className = `card ${!data.active ? 'disabled' : ''}`;
             
             let clickAction = "";
             if (data.active) {
-                if (key === 'attendance' || key === 'coupon' || key === 'booking') {
-                    clickAction = `onclick="openAppModal('${data.url}', '${data.title}')"`;
-                } else {
-                    clickAction = `href="${data.url}" target="_blank"`;
-                }
+                // 🌟 ปลดล็อก: บังคับให้ทุกฟังก์ชันบริการ (ทั้ง POS, สต๊อก, ลงเวลา, จอง, คูปอง) เปิดแบบหน้าจอซ้อน Modal ทั้งหมด
+                let isLargeApp = (key === 'pos') ? 'true' : 'false';
+                clickAction = `onclick="openAppModal('${data.url}', '${data.title}', ${isLargeApp})"`;
             } else {
                 clickAction = `onclick="alert('${data.errorMsg}')"`;
             }
@@ -401,24 +460,64 @@
         }
 
         // ฟังก์ชันเปิดหน้าต่างย่อยซ้อนระบบหลัก
-        function openAppModal(url, title) {
+        function openAppModal(url, title, isLargeApp) {
+            const win = document.getElementById('appModalWindow');
+            win.className = "app-modal-window"; // คืนค่าเริ่มต้นล้างสถานะย่อขยายเก่า
+            
             document.getElementById('appModalTitle').innerText = title;
             document.getElementById('appModalIframe').src = url;
             document.getElementById('appModalOverlay').classList.add('show');
             
+            // 🌟 ตั้งค่าอัจฉริยะ: หากกดเปิดระบบคิดเงิน POS หน้าร้าน ให้ขยายหน้าจอเต็มฟูลสกรีนให้อัตโนมัติทันที
+            if (isLargeApp) {
+                win.classList.add('fullscreen');
+            }
+
             document.body.style.position = 'fixed';
             document.body.style.width = '100%';
         }
 
-        // ฟังก์ชันปิดหน้าต่างย่อย
-        function closeAppModal(event = null, force = false) {
-            if (force || event.target.id === "appModalOverlay") {
+        // 🔴 ฟังก์ชันปุ่มสีแดง: ปิดหน้าต่างย่อย คืนสิทธิ์จอหลักหลังบ้าน
+        function closeAppModal(force = false) {
+            if (force) {
                 document.getElementById('appModalOverlay').classList.remove('show');
                 document.getElementById('appModalIframe').src = ""; 
-                
                 document.body.style.position = '';
                 document.body.style.width = '';
             }
+        }
+
+        // 🟡 ฟังก์ชันปุ่มสีเหลือง: ย่อหน้าต่างย่อยค้างระบบไว้มุมขวาล่าง
+        function minimizeAppModal(event, forceRestore = false) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            const overlay = document.getElementById('appModalOverlay');
+            const win = document.getElementById('appModalWindow');
+            
+            if (win.classList.contains('minimized') || forceRestore) {
+                // หากหน้าจอย่ออยู่ -> กู้คืนกลับมาขนาดปกติ
+                win.classList.remove('minimized');
+                overlay.style.backgroundColor = "rgba(15, 23, 42, 0.4)";
+                overlay.style.pointerEvents = "auto";
+                document.body.style.position = 'fixed';
+            } else {
+                // หากหน้าจอปกติ -> ทำการย่อหน้าต่างลงไปมุมขวาล่าง
+                win.className = "app-modal-window minimized"; // ล้างคลาส fullscreen ออกอัตโนมัติ
+                overlay.style.backgroundColor = "transparent";
+                overlay.style.pointerEvents = "none"; // เปิดทางให้กดปุ่มการ์ดแผ่นอื่นด้านหลังได้ปกติ
+                document.body.style.position = '';
+            }
+        }
+
+        // 🟢 ฟังก์ชันปุ่มสีเขียว: ขยายหน้าต่างย่อยสลับสัดส่วน เต็มจอ / ขนาดปกติ (Toggle)
+        function toggleFullscreenAppModal() {
+            const win = document.getElementById('appModalWindow');
+            if (win.classList.contains('minimized')) return; // ถ้าย่ออยู่ห้ามกดขยาย
+            
+            win.classList.toggle('fullscreen');
         }
 
         // ฟังก์ชันแชร์ลิงก์
