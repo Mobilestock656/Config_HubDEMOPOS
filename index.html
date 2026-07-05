@@ -295,10 +295,10 @@
     <div id="toastNotification" class="toast">✨ คัดลอกลิงก์เรียบร้อยแล้ว</div>
 
     <script>
-        // ลิงก์กลาง Master Apps Script API
+        // 🔗 ลิงก์กลาง Master Apps Script API ของคุณ
         const Master_GAS_URL = "https://script.google.com/macros/s/AKfycbxrJzwwtaV39NFkc_LH3gkj_wEZjC9fw_e6SZei89tG3GVYuW45pkMCyWu32j6v2v4/exec";
 
-        // ฟังก์ชันสร้างการ์ดระบบ (ปรับเป็นปุ่มกดขนาดใหญ่กว้างเต็มบล็อก)
+        // ฟังก์ชันสร้างการ์ดระบบ (ปุ่มกดขนาดใหญ่กว้างเต็มบล็อก)
         function createCard(data) {
             const card = document.createElement('div');
             card.className = `card ${!data.active ? 'disabled' : ''}`;
@@ -332,56 +332,58 @@
             }).catch(() => alert('ไม่สามารถคัดลอกลิงก์ได้'));
         }
 
-        // ประมวลผลดึงข้อมูลแยกรายร้านค้าแบบ Dynamic
+        // ฟังก์ชันหลักเมื่อได้รับข้อมูลจาก Google Apps Script
+        window.handleHubResponse = function(res) {
+            if (res && res.status === "success") {
+                const config = res.data;
+                const internalGrid = document.getElementById('internalGrid');
+                const guestGrid = document.getElementById('guestGrid');
+
+                internalGrid.innerHTML = '';
+                guestGrid.innerHTML = '';
+
+                // เปลี่ยนข้อความหัวข้อตามชื่อร้านที่ระบุ
+                document.getElementById('shopTitleDisplay').innerText = res.shop;
+                document.getElementById('footerShopName').innerText = res.shop.toUpperCase();
+
+                // จัดเรียงการ์ดลงหมวดหมู่
+                Object.keys(config).forEach(key => {
+                    const item = config[key];
+                    const cardElement = createCard(item);
+                    
+                    if (item.type === "staff") {
+                        internalGrid.appendChild(cardElement);
+                    } else if (item.type === "customer") {
+                        guestGrid.appendChild(cardElement);
+                    }
+                });
+
+                // ปิดหน้าจอโหลดโปรแกรม
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('mainContainer').classList.add('loaded');
+                }, 400);
+            } else {
+                alert("เกิดข้อผิดพลาดจากฝั่งสเปรดชีต: " + (res ? res.msg : 'Unknown'));
+            }
+        };
+
+        // เริ่มต้นยิงขอข้อมูลแบบเทคนิค JSONP ทันทีเมื่อเปิดหน้ากระดาน
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             let shopName = urlParams.get('shop') || 'DEMOPOS';
+            
+            // ระบบตรวจสอบอัตโนมัติ: ถ้าลิงก์มี ? อยู่แล้วให้ใช้ & ถ้าไม่มีให้ใช้ ? ป้องกันลิงก์พังขาดเด็ดขาด
+            const connector = Master_GAS_URL.includes('?') ? '&' : '?';
+            const jsonpUrl = `${Master_GAS_URL}${connector}action=getHubConfig&shop=${encodeURIComponent(shopName)}&callback=handleHubResponse`;
 
-            const FINAL_API_URL = `${Master_GAS_URL}?action=getHubConfig&shop=${encodeURIComponent(shopName)}`;
-
-            fetch(FINAL_API_URL)
-                .then(response => response.json())
-                .then(res => {
-                    if (res.status === "success") {
-                        const config = res.data;
-                        const internalGrid = document.getElementById('internalGrid');
-                        const guestGrid = document.getElementById('guestGrid');
-
-                        internalGrid.innerHTML = '';
-                        guestGrid.innerHTML = '';
-
-                        // เปลี่ยนข้อความหัวข้อตามชื่อร้านที่ดึงมาจริงจาก Sheet
-                        if(shopName !== 'DEMOPOS') {
-                            document.getElementById('shopTitleDisplay').innerText = res.shop;
-                            document.getElementById('footerShopName').innerText = res.shop.toUpperCase();
-                        }
-
-                        // จัดเรียงการ์ดลงหมวดหมู่
-                        Object.keys(config).forEach(key => {
-                            const item = config[key];
-                            const cardElement = createCard(item);
-                            
-                            if (item.type === "staff") {
-                                internalGrid.appendChild(cardElement);
-                            } else if (item.type === "customer") {
-                                guestGrid.appendChild(cardElement);
-                            }
-                        });
-
-                        // ปิดสกรีนดาวน์โหลด แสดงคอนเทนต์
-                        document.getElementById('loader').style.opacity = '0';
-                        setTimeout(() => {
-                            document.getElementById('loader').style.display = 'none';
-                            document.getElementById('mainContainer').classList.add('loaded');
-                        }, 400);
-                    } else {
-                        alert("เกิดข้อผิดพลาดในการดึงข้อมูลจากชีต: " + res.msg);
-                    }
-                })
-                .catch(err => {
-                    alert("การเชื่อมต่อล้มเหลว กรุณาตรวจสอบสิทธิ์การแชร์ของกูเกิลชีตหรือลิงก์โปรแกรม");
-                    console.error(err);
-                });
+            const script = document.createElement('script');
+            script.src = jsonpUrl;
+            script.onerror = function() {
+                alert("การเชื่อมต่อล้มเหลว กรุณาตรวจสอบสถานะสิทธิ์การตั้งค่าแชร์ในกูเกิลชีต หรือยืนยันรหัส Deployment ใหม่ของระบบ");
+            };
+            document.body.appendChild(script);
         });
     </script>
 </body>
