@@ -2,15 +2,14 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MANAGEMENT HUB — Digital Services Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght=200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-main: #F8FAFC;
             --panel-bg: #FFFFFF;
             --primary: #00796B;
-            --primary-hover: #004D40;
             --text-main: #0F172A;
             --text-muted: #64748B;
             --border-color: #E2E8F0;
@@ -19,30 +18,35 @@
             --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02);
         }
 
+        /* 🔒 ล็อกหน้าจอห้ามเลื่อนเด็ดขาด */
         body {
             font-family: 'Prompt', sans-serif;
             background-color: var(--bg-main);
             margin: 0;
             padding: 0;
             color: var(--text-main);
-            min-height: 100vh;
+            height: 100vh;
+            max-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
+            overflow: hidden; /* ปิดการ Scroll */
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Minimal Header */
+        /* ย่อ Header ให้กระชับขึ้นตามสัดส่วนจอ */
         .header {
             text-align: center;
-            padding: 60px 20px 40px;
+            padding: 3vh 20px 2vh;
             background-color: var(--panel-bg);
             border-bottom: 1px solid var(--border-color);
             box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
         }
 
         .header .logo-text {
             font-weight: 600;
-            font-size: 2.2rem;
+            font-size: clamp(1.5rem, 4vh, 2rem);
             letter-spacing: 1px;
             margin: 0;
             color: var(--text-main);
@@ -50,51 +54,57 @@
         }
 
         .header .accent-line {
-            width: 60px;
-            height: 1px;
+            width: 50px;
+            height: 2px;
             background-color: var(--primary);
-            margin: 20px auto;
-            opacity: 0.3;
+            margin: 1vh auto;
+            opacity: 0.5;
+            border-radius: 2px;
         }
 
         .header p {
-            margin: 8px 0 0 0;
-            font-size: 0.9rem;
+            margin: 0;
+            font-size: clamp(0.7rem, 1.5vh, 0.85rem);
             font-weight: 400;
             color: var(--text-muted);
             letter-spacing: 2px;
             text-transform: uppercase;
         }
 
-        /* Main Container */
+        /* Container ดันให้อยู่ตรงกลางจอเสมอ */
         .container {
-            max-width: 1140px;
+            max-width: 1200px;
             width: 100%;
-            margin: 40px auto 60px;
-            padding: 0 24px;
+            margin: 0 auto;
+            padding: 2vh 20px;
             box-sizing: border-box;
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* จัดให้อยู่ตรงกลางหน้าจอ */
             opacity: 0;
             transition: opacity 0.4s ease;
-            display: none;
         }
-        .container.loaded { 
-            display: block;
-            opacity: 1; 
-        }
+        .container.loaded { opacity: 1; }
 
-        .hub-section { margin-bottom: 45px; }
+        .hub-section { 
+            margin-bottom: 3vh; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .hub-section:last-child { margin-bottom: 0; }
 
         .section-header {
-            font-size: 1.05rem;
+            font-size: clamp(0.8rem, 2vh, 1rem);
             font-weight: 600;
             letter-spacing: 1px;
             color: var(--primary);
             text-transform: uppercase;
-            margin-bottom: 25px;
+            margin-bottom: 2vh;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .section-header::after {
@@ -104,226 +114,189 @@
             background: linear-gradient(90deg, var(--border-color), transparent);
         }
 
-        /* Clean White Grid & Cards */
+        /* 📱 ระบบ Grid อัตโนมัติ: บีบหรือขยายตามจำนวนที่มี (Auto-Fit) */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: clamp(10px, 2vh, 20px);
+            justify-content: center;
         }
 
+        /* ดีไซน์ปุ่มสไตล์ App Icon */
         .card {
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 30px;
+            padding: clamp(10px, 2.5vh, 20px) 10px;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             box-shadow: var(--shadow-sm);
-        }
-
-        .card-link {
             text-decoration: none;
             color: inherit;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            flex: 1;
+            cursor: pointer;
         }
 
         .card:not(.disabled):hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: #CBD5E1;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+        .card:not(.disabled):active {
+            transform: scale(0.97);
+            background-color: #F8FAFC;
         }
 
         .card.disabled {
             background-color: #F1F5F9;
             opacity: 0.6;
             cursor: not-allowed;
-            border-color: var(--border-color);
             box-shadow: none;
         }
 
+        /* ป้ายกำกับและปุ่มแชร์ ย้ายไปอยู่มุมซ้าย-ขวาบน */
         .card-meta {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            pointer-events: none; /* ให้คลิกทะลุไปโดนตัวการ์ดได้ */
         }
 
         .card-badge {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             color: var(--primary);
-            border: 1px solid #CCFBF1;
-            padding: 4px 12px;
-            border-radius: 20px;
+            padding: 2px 8px;
+            border-radius: 12px;
             font-weight: 600;
             background: #E6F4F1;
         }
-        .card.disabled .card-badge { 
-            color: #DC2626; 
-            border-color: #FEE2E2; 
-            background: #FEE2E2;
-        }
-
-        .meta-right { display: flex; align-items: center; gap: 12px; }
+        .card.disabled .card-badge { color: #DC2626; background: #FEE2E2; }
 
         .btn-share {
-            background: #F8FAFC;
-            border: 1px solid var(--border-color);
+            background: transparent;
+            border: none;
             color: var(--text-muted);
-            border-radius: 50%;
-            width: 34px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 1rem;
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-            z-index: 10;
+            pointer-events: auto; /* ให้ปุ่มแชร์กดได้ */
+            padding: 0;
+            transition: transform 0.2s;
         }
-        .btn-share:hover { background: #E2E8F0; color: var(--text-main); border-color: #CBD5E1; }
+        .btn-share:hover { transform: scale(1.2); }
 
-        .card-icon { font-size: 1.8rem; }
+        /* ขยายไอคอนให้เด่นขึ้นมาแทนที่คำอธิบาย */
+        .card-icon { 
+            font-size: clamp(2rem, 5vh, 2.8rem); 
+            margin: 15px 0 10px 0;
+        }
 
         .card-title { 
-            font-size: 1.2rem; 
+            font-size: clamp(0.85rem, 1.8vh, 1rem); 
             font-weight: 600; 
             color: var(--text-main); 
-            margin: 0 0 10px 0; 
-        }
-        .card-desc { 
-            font-size: 0.9rem; 
-            color: var(--text-muted); 
-            line-height: 1.6; 
-            margin: 0 0 25px 0; 
-            flex: 1; 
-            font-weight: 300; 
+            margin: 0; 
+            line-height: 1.3;
         }
 
-        /* Solid UI Action Buttons */
-        .card-action-btn {
-            background-color: var(--primary);
-            color: white;
-            text-align: center;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: background-color 0.2s ease;
-            margin-top: auto;
-            box-shadow: 0 2px 4px rgba(0, 121, 107, 0.1);
-        }
-        .card:not(.disabled):hover .card-action-btn {
-            background-color: var(--primary-hover);
-        }
-        .card.disabled .card-action-btn {
-            background-color: #94A3B8;
-            color: #E2E8F0;
-            box-shadow: none;
-        }
-
-        /* Clean Footer */
+        /* ย่อ Footer */
         .footer { 
             text-align: center; 
-            padding: 30px 20px; 
-            font-size: 0.85rem; 
+            padding: 2vh 20px; 
+            font-size: clamp(0.7rem, 1.5vh, 0.8rem); 
             color: var(--text-muted); 
             border-top: 1px solid var(--border-color); 
             background-color: var(--panel-bg);
-            font-weight: 400; 
+            flex-shrink: 0;
         }
         .footer span { color: var(--primary); font-weight: 600; }
 
-        /* Minimal Loader */
+        /* Loader */
         #loader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #FFFFFF;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #FFFFFF; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 99999;
             transition: opacity 0.4s ease;
         }
         .spinner {
-            width: 40px; height: 40px;
-            border: 3px solid #E2E8F0;
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
+            width: 36px; height: 36px; border: 3px solid #E2E8F0;
+            border-top: 3px solid var(--primary); border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #loader p { color: var(--primary); margin-top: 20px; font-weight: 500; font-size: 0.85rem; letter-spacing: 1px; }
+        #loader p { color: var(--primary); margin-top: 15px; font-weight: 500; font-size: 0.85rem; letter-spacing: 1px; }
 
-        .toast { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: #0F172A; color: white; padding: 12px 28px; border-radius: 30px; font-size: 0.9rem; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 9999; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px; font-weight: 500; }
-        .toast.show { bottom: 40px; }
+        .toast { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: #0F172A; color: white; padding: 10px 24px; border-radius: 30px; font-size: 0.85rem; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 9999; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px; font-weight: 500; }
+        .toast.show { bottom: 4vh; }
     </style>
 </head>
 <body>
 
     <div id="loader">
         <div class="spinner"></div>
-        <p>กำลังโหลดระบบ...</p>
+        <p>กำลังเตรียมระบบ...</p>
     </div>
 
     <div class="header">
-        <h1 class="logo-text" id="shopTitleDisplay">SALON KORI</h1>
+        <h1 class="logo-text" id="shopTitleDisplay">MANAGEMENT HUB</h1>
         <div class="accent-line"></div>
-        <p>Management Hub & Digital Services</p>
+        <p>Digital Services Platform</p>
     </div>
 
     <div class="container" id="mainContainer">
         <div class="hub-section">
-            <div class="section-header">Internal Management System</div>it
+            <div class="section-header">Internal Management</div>
             <div class="grid" id="internalGrid"></div>
         </div>
-        <div class="hub-section">
-            <div class="section-header">Exclusive Guest Services</div>
+        <div class="hub-section" id="guestSection" style="display: none;">
+            <div class="section-header">Guest Services</div>
             <div class="grid" id="guestGrid"></div>
         </div>
     </div>
 
     <div class="footer">
-        &copy; 2026 <span id="footerShopName">SALON KORI</span>. All Rights Reserved.
+        &copy; 2026 <span id="footerShopName">DEMOPOS</span>. All Rights Reserved.
     </div>
 
-    <div id="toastNotification" class="toast">✨ คัดลอกลิงก์เรียบร้อยแล้ว</div>
+    <div id="toastNotification" class="toast">✨ คัดลอกลิงก์แล้ว</div>
 
     <script>
-        // 🔗 ลิงก์กลาง Master Apps Script API ของคุณ
         const Master_GAS_URL = "https://script.google.com/macros/s/AKfycbxrJzwwtaV39NFkc_LH3gkj_wEZjC9fw_e6SZei89tG3GVYuW45pkMCyWu32j6v2v4/exec";
 
-        // ฟังก์ชันสร้างการ์ดระบบ (ปุ่มกดขนาดใหญ่กว้างเต็มบล็อก)
+        // ฟังก์ชันสร้างการ์ด (อัปเดตให้กดได้ทั้งปุ่ม และดีไซน์แบบ App Icon)
         function createCard(data) {
-            const card = document.createElement('div');
+            const card = document.createElement('a');
             card.className = `card ${!data.active ? 'disabled' : ''}`;
+            
+            if (data.active) {
+                card.href = data.url;
+                card.target = "_blank"; // เปิดหน้าต่างใหม่
+            } else {
+                card.href = "javascript:void(0)";
+                card.onclick = function() { alert(data.errorMsg); };
+            }
+
+            // นำ Description และปุ่มกดเข้าสีเขียวออก เพื่อประหยัดพื้นที่แนวตั้ง
             card.innerHTML = `
                 <div class="card-meta">
                     <span class="card-badge">${!data.active ? 'Maintenance' : data.badge}</span>
-                    <div class="meta-right">
-                        <button class="btn-share" onclick="shareLink(event, '${data.url}')" title="คัดลอกลิงก์">🔗</button>
-                        <div class="card-icon">${data.icon}</div>
-                    </div>
+                    <button class="btn-share" onclick="shareLink(event, '${data.url}')" title="คัดลอกลิงก์">🔗</button>
                 </div>
-                <a href="${data.active ? data.url : 'javascript:void(0);'}" ${data.active ? 'target="_blank"' : `onclick="alert('${data.errorMsg}')"`} class="card-link">
-                    <h3 class="card-title">${data.title}</h3>
-                    <p class="card-desc">${data.desc}</p>
-                    <div class="card-action-btn">
-                        ${data.active ? 'เปิดเข้าใช้งานระบบ' : 'กำลังปรับปรุงระบบ'}
-                    </div>
-                </a>
+                <div class="card-icon">${data.icon}</div>
+                <h3 class="card-title">${data.title}</h3>
             `;
             return card;
         }
 
-        // ฟังก์ชันแชร์ลิงก์
         function shareLink(event, url) {
             event.preventDefault();
             event.stopPropagation();
@@ -334,21 +307,20 @@
             }).catch(() => alert('ไม่สามารถคัดลอกลิงก์ได้'));
         }
 
-        // ฟังก์ชันหลักเมื่อได้รับข้อมูลจาก Google Apps Script
         window.handleHubResponse = function(res) {
             if (res && res.status === "success") {
                 const config = res.data;
                 const internalGrid = document.getElementById('internalGrid');
                 const guestGrid = document.getElementById('guestGrid');
+                const guestSection = document.getElementById('guestSection');
 
                 internalGrid.innerHTML = '';
                 guestGrid.innerHTML = '';
+                let hasGuestItems = false;
 
-                // เปลี่ยนข้อความหัวข้อตามชื่อร้านที่ดึงมาจากฝั่ง Google Sheet จริง
                 document.getElementById('shopTitleDisplay').innerText = res.shop;
                 document.getElementById('footerShopName').innerText = res.shop.toUpperCase();
 
-                // จัดเรียงการ์ดลงหมวดหมู่
                 Object.keys(config).forEach(key => {
                     const item = config[key];
                     const cardElement = createCard(item);
@@ -357,33 +329,36 @@
                         internalGrid.appendChild(cardElement);
                     } else if (item.type === "customer") {
                         guestGrid.appendChild(cardElement);
+                        hasGuestItems = true;
                     }
                 });
 
-                // ปิดหน้าจอโหลดโปรแกรม
+                // ซ่อน Section ลูกค้าถ้าไม่มีข้อมูล เพื่อจัดระเบียบหน้าจอให้แน่นขึ้น
+                if(hasGuestItems) {
+                    guestSection.style.display = "flex";
+                }
+
                 document.getElementById('loader').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('loader').style.display = 'none';
                     document.getElementById('mainContainer').classList.add('loaded');
                 }, 400);
             } else {
-                alert("เกิดข้อผิดพลาดจากฝั่งสเปรดชีต: " + (res ? res.msg : 'Unknown'));
+                alert("เกิดข้อผิดพลาด: " + (res ? res.msg : 'Unknown'));
             }
         };
 
-        // เริ่มต้นยิงขอข้อมูลแบบเทคนิค JSONP ทันทีเมื่อเปิดหน้ากระดาน
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             let shopName = urlParams.get('shop') || 'DEMOPOS';
             
-            // ระบบตรวจสอบอัตโนมัติ: ถ้าลิงก์มี ? อยู่แล้วให้ใช้ & ถ้าไม่มีให้ใช้ ? ป้องกันลิงก์พังขาดเด็ดขาด
             const connector = Master_GAS_URL.includes('?') ? '&' : '?';
             const jsonpUrl = `${Master_GAS_URL}${connector}action=getHubConfig&shop=${encodeURIComponent(shopName)}&callback=handleHubResponse`;
 
             const script = document.createElement('script');
             script.src = jsonpUrl;
             script.onerror = function() {
-                alert("การเชื่อมต่อล้มเหลว กรุณาตรวจสอบสถานะสิทธิ์การตั้งค่าแชร์ในกูเกิลชีต หรือยืนยันรหัส Deployment ใหม่ของระบบ");
+                alert("การเชื่อมต่อล้มเหลว กรุณาตรวจสอบสถานะสิทธิ์การตั้งค่าแชร์ในกูเกิลชีต");
             };
             document.body.appendChild(script);
         });
