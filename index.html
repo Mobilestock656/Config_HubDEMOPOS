@@ -19,33 +19,39 @@
             --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 10px 10px -5px rgba(15, 23, 42, 0.03);
         }
 
-        /* 🔒 ล็อกหน้าจอห้ามเลื่อนเด็ดขาด */
+        /* 📱 ปลดล็อกให้เลื่อนขึ้นลงได้เมื่ออยู่บนมือถือ หรือหน้าจอที่มีขนาดเล็ก */
         body {
             font-family: 'Prompt', sans-serif;
             background-color: var(--bg-main);
             margin: 0;
             padding: 0;
             color: var(--text-main);
-            height: 100vh;
-            max-height: 100vh;
+            min-height: 100vh; /* ปรับให้ยืดหยุ่น ไม่บล็อกตายตัวที่ 100vh */
             display: flex;
             flex-direction: column;
-            overflow: hidden; 
+            overflow-x: hidden;
+            overflow-y: auto; /* ยอมให้เลื่อนขึ้นลงได้ */
             -webkit-text-size-adjust: 100%;
             -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 🔒 ล็อกหน้าจอหลังบ้านทันทีที่เปิดหน้าต่างซ้อน ป้องกันบั๊กเลื่อนแล้วกดปุ่มไม่ติด */
+        body.modal-open {
+            overflow: hidden !important;
+            height: 100vh;
         }
 
         /* Header */
         .header {
             text-align: center;
-            padding: 3vh 20px 2vh;
+            padding: 30px 20px 20px;
             background-color: var(--panel-bg);
             border-bottom: 1px solid var(--border-color);
             box-shadow: var(--shadow-sm);
             flex-shrink: 0;
         }
         .header .logo-text { font-weight: 600; font-size: clamp(1.5rem, 4vh, 2rem); letter-spacing: 1px; margin: 0; color: var(--text-main); text-transform: uppercase; }
-        .header .accent-line { width: 50px; height: 2px; background-color: var(--primary); margin: 1vh auto; opacity: 0.5; border-radius: 2px; }
+        .header .accent-line { width: 50px; height: 2px; background-color: var(--primary); margin: 10px auto; opacity: 0.5; border-radius: 2px; }
         .header p { margin: 0; font-size: clamp(0.7rem, 1.5vh, 0.85rem); font-weight: 400; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
 
         /* Container */
@@ -53,7 +59,7 @@
             max-width: 1200px;
             width: 100%;
             margin: 0 auto;
-            padding: 2vh 20px;
+            padding: 30px 20px 40px;
             box-sizing: border-box;
             flex: 1;
             display: flex;
@@ -64,16 +70,16 @@
         }
         .container.loaded { opacity: 1; }
 
-        .hub-section { margin-bottom: 3vh; display: flex; flex-direction: column; justify-content: center; }
+        .hub-section { margin-bottom: 30px; display: flex; flex-direction: column; justify-content: center; }
         .hub-section:last-child { margin-bottom: 0; }
-        .section-header { font-size: clamp(0.8rem, 2vh, 1rem); font-weight: 600; letter-spacing: 1px; color: var(--primary); text-transform: uppercase; margin-bottom: 2vh; display: flex; align-items: center; gap: 12px; }
+        .section-header { font-size: clamp(0.8rem, 2vh, 1rem); font-weight: 600; letter-spacing: 1px; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
         .section-header::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-color), transparent); }
 
-        /* 📱 ระบบ Grid อัตโนมัติสไตล์ App Icon */
+        /* ระบบ Grid อัตโนมัติสไตล์ App Icon */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: clamp(10px, 2vh, 20px);
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
             justify-content: center;
         }
 
@@ -81,7 +87,7 @@
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: clamp(10px, 2.5vh, 20px) 10px;
+            padding: 20px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -98,17 +104,17 @@
         .card:not(.disabled):active { transform: scale(0.97); background-color: #F8FAFC; }
         .card.disabled { background-color: #F1F5F9; opacity: 0.6; cursor: not-allowed; box-shadow: none; }
 
-        .card-meta { position: absolute; top: 8px; left: 8px; right: 8px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
+        .card-meta { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
         .card-badge { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary); padding: 2px 8px; border-radius: 12px; font-weight: 600; background: #E6F4F1; }
         .card.disabled .card-badge { color: #DC2626; background: #FEE2E2; }
 
         .btn-share { background: transparent; border: none; color: var(--text-muted); font-size: 1rem; cursor: pointer; pointer-events: auto; padding: 0; transition: transform 0.2s; }
-        .btn-share:hover { transform: scale(1.2); }
+        .btn-share:hover { transform: scale(1.2); color: var(--text-main); }
 
-        .card-icon { font-size: clamp(2rem, 5vh, 2.8rem); margin: 15px 0 10px 0; }
-        .card-title { font-size: clamp(0.85rem, 1.8vh, 1rem); font-weight: 600; color: var(--text-main); margin: 0; line-height: 1.3; }
+        .card-icon { font-size: clamp(2.2rem, 5vh, 2.8rem); margin: 15px 0 10px 0; }
+        .card-title { font-size: 0.9rem; font-weight: 600; color: var(--text-main); margin: 0; line-height: 1.3; }
 
-        /* 🎛️ LUXURY MODAL OVERLAY STYLES (นำกลับมา) */
+        /* 🎛️ LUXURY MODAL OVERLAY STYLES */
         .app-modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(15, 23, 42, 0.4);
@@ -159,7 +165,7 @@
         .app-modal-iframe { width: 100%; height: 100%; border: none; display: block; }
 
         /* Footer */
-        .footer { text-align: center; padding: 2vh 20px; font-size: clamp(0.7rem, 1.5vh, 0.8rem); color: var(--text-muted); border-top: 1px solid var(--border-color); background-color: var(--panel-bg); flex-shrink: 0; }
+        .footer { text-align: center; padding: 20px; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border-color); background-color: var(--panel-bg); flex-shrink: 0; }
         .footer span { color: var(--primary); font-weight: 600; }
 
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FFFFFF; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 99999; transition: opacity 0.4s ease; }
@@ -219,16 +225,16 @@
     <div id="toastNotification" class="toast">✨ คัดลอกลิงก์แล้ว</div>
 
     <script>
+        // ลิงก์กลาง Master Apps Script API ของคุณ
         const Master_GAS_URL = "https://script.google.com/macros/s/AKfycbxrJzwwtaV39NFkc_LH3gkj_wEZjC9fw_e6SZei89tG3GVYuW45pkMCyWu32j6v2v4/exec";
 
-        // ฟังก์ชันสร้างการ์ด (นำระบบ onclick Modal กลับมา)
+        // ฟังก์ชันสร้างการ์ดแอปพลิเคชัน
         function createCard(key, data) {
             const card = document.createElement('a');
             card.className = `card ${!data.active ? 'disabled' : ''}`;
             card.href = "javascript:void(0)";
             
             if (data.active) {
-                // ผูกสคริปต์ให้คลิกแล้วเปิดหน้าต่างซ้อน Modal
                 card.onclick = function() { openAppModal(data.url, data.title, key); };
             } else {
                 card.onclick = function() { alert(data.errorMsg); };
@@ -245,7 +251,7 @@
             return card;
         }
 
-        // 🌟 ฟังก์ชันจัดการหน้าต่าง Modal (นำกลับมาทั้งหมด)
+        // 🌟 เปิดหน้าต่างซ้อนและล็อกหน้าจอหลัก
         function openAppModal(url, title, key) {
             const overlay = document.getElementById('appModalOverlay');
             const win = document.getElementById('appModalWindow');
@@ -256,22 +262,29 @@
             document.getElementById('appModalTitle').innerText = title;
             document.getElementById('appModalIframe').src = url;
             
-            // ขยายจออัตโนมัติเมื่อเป็น POS หรือ Stock
             let lowerKey = String(key).toLowerCase();
             let lowerUrl = String(url).toLowerCase();
             if (lowerKey.includes('pos') || lowerKey.includes('stock') || lowerUrl.includes('pos') || lowerUrl.includes('stock') || lowerUrl.includes('mobilestock')) {
                 win.classList.add('fullscreen');
             }
+
+            // ล็อกหน้าจอด้านหลังทันทีเพื่อป้องกันการเลื่อนแล้วกดไม่ติด
+            document.body.classList.add('modal-open');
         }
 
+        // 🔴 ปิดหน้าต่างซ้อนและปลดล็อกหน้าจอหลัก
         function closeAppModal(force = false) {
             if (force) {
                 const overlay = document.getElementById('appModalOverlay');
                 overlay.className = "app-modal-overlay"; 
                 document.getElementById('appModalIframe').src = ""; 
+                
+                // คืนค่าให้หน้าจอหลักเลื่อนได้ตามปกติ
+                document.body.classList.remove('modal-open');
             }
         }
 
+        // 🟡 ย่อ/ขยายหน้าต่าง
         function minimizeAppModal(event, forceRestore = false) {
             if (event) { event.preventDefault(); event.stopPropagation(); }
             const overlay = document.getElementById('appModalOverlay');
@@ -280,9 +293,11 @@
             if (win.classList.contains('minimized') || forceRestore) {
                 win.classList.remove('minimized');
                 overlay.classList.remove('is-minimized');
+                document.body.classList.add('modal-open'); // ล็อกจอหลังไว้เหมือนเดิมตอนขยายขึ้นมา
             } else {
                 win.className = "app-modal-window minimized"; 
                 overlay.classList.add('is-minimized'); 
+                document.body.classList.remove('modal-open'); // ปลดล็อกจอหลังให้กดแอปอื่นได้ชั่วคราว
             }
         }
 
